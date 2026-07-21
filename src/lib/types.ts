@@ -118,6 +118,30 @@ export interface Database {
           },
         ];
       };
+      feedback: {
+        Row: {
+          id: number;
+          vendor_id: string;
+          nps: number;
+          message: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: number;
+          vendor_id: string;
+          nps: number;
+          message?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: number;
+          vendor_id?: string;
+          nps?: number;
+          message?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -150,3 +174,4 @@ export interface Database {
 export type Vendor = Database['stockkit']['Tables']['vendors']['Row'];
 export type Product = Database['stockkit']['Tables']['products']['Row'];
 export type StockMovement = Database['stockkit']['Tables']['stock_movements']['Row'];
+export type Feedback = Database['stockkit']['Tables']['feedback']['Row'];

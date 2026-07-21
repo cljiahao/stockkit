@@ -75,3 +75,9 @@ export const socialLinksSchema = z.object({
   tiktok: socialUrl,
 });
 export type SocialLinksInput = z.infer<typeof socialLinksSchema>;
+
+export const feedbackSchema = z.object({
+  nps: z.number().int().min(0).max(10),
+  message: z.string().trim().max(2000).optional(),
+});
+export type FeedbackInput = z.infer<typeof feedbackSchema>;
