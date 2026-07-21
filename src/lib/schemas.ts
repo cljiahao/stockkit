@@ -60,3 +60,18 @@ export function parseDollarsToCents(
   if (!Number.isFinite(value) || value < 0) return { ok: false };
   return { ok: true, cents: Math.round(value * 100) };
 }
+
+export const profileNameSchema = z.object({
+  name: z.string().trim().min(1, 'Enter a stall/shop name').max(100),
+});
+export type ProfileNameInput = z.infer<typeof profileNameSchema>;
+
+const socialUrl = z.string().trim().url('Enter a valid URL').max(300).optional().or(z.literal(''));
+
+export const socialLinksSchema = z.object({
+  website: socialUrl,
+  instagram: socialUrl,
+  facebook: socialUrl,
+  tiktok: socialUrl,
+});
+export type SocialLinksInput = z.infer<typeof socialLinksSchema>;
