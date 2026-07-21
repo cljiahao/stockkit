@@ -7,57 +7,18 @@
   "adoWiki": false,
   "richReadme": true,
   "seeded_files": {
-    "AGENTS.md": {
-      "origin_hash": "0d1f226ef56e267b42c5d1d3c219770ac08b85497d8e31abd8e7df7dc60b0ad5",
-      "path": "AGENTS.md"
-    },
-    ".claude/settings.json": {
-      "origin_hash": "0e74a69df05f14fe56eda076a1418f4254c2660668670b94f7035410fecc4617",
-      "path": ".claude/settings.json"
-    },
-    ".claude/hooks/verify.sh": {
-      "origin_hash": "ccf4bb6c4cec18d0210387a608c1bfff84348719d09fe2efc959561d10f86ac6",
-      "path": ".claude/hooks/verify.sh"
-    },
-    ".claude/skills/next-verify/SKILL.md": {
-      "origin_hash": "82db8448b1d7932b40d14850f86ed43b3b05eb5078b50e1ea20d59d463920e39",
-      "path": ".claude/skills/next-verify/SKILL.md"
-    },
-    ".claude/skills/supabase-migrate/SKILL.md": {
-      "origin_hash": "9fc629fe0b162eff1e062dff81e95749b2f9043a06b791da60d7a0da9db34b7a",
-      "path": ".claude/skills/supabase-migrate/SKILL.md"
-    },
-    "lefthook.yml": {
-      "origin_hash": "79e9e9af9fc218583ae96fb85b1c506f51207e2f8ee31a56a2a93896181397d2",
-      "path": "lefthook.yml"
-    },
-    ".lefthook/commit-msg.sh": {
-      "origin_hash": "65d9b8f755a4103b466f4ac3c0291af7a0ddd30721c1913afac0cffefc4384e3",
-      "path": ".lefthook/commit-msg.sh"
-    },
-    ".lefthook/commit-msg/commit-msg.sh": {
-      "origin_hash": "bb4bd5725a365adf94fc47a17d20e9789464c52d6dd976142a4872ffea578a68",
-      "path": ".lefthook/commit-msg/commit-msg.sh"
-    },
-    ".lefthook/readme-coupling.sh": {
-      "origin_hash": "0deb029af6aa2d0edf9a699ccf68ff59a2f4e0f0572fa48ac3615318f22c09ab",
-      "path": ".lefthook/readme-coupling.sh"
-    },
-    ".gitleaks.toml": {
-      "origin_hash": "f9cd4aac35f474f9a48c691b4fd46642388389fa650481342fc4d5ad6216de4e",
-      "path": ".gitleaks.toml"
-    },
-    ".github/workflows/ci.yml": {
-      "origin_hash": "2c8e325c02c39d7e425fdea7404d6edcdaf5adfaa947e21568925000dadb1db5",
-      "path": ".github/workflows/ci.yml"
-    },
-    ".claude/verify-harness.sh": {
-      "origin_hash": "8c50cc319c80fb1b6e4129f149b69a7341803dc078f388fe0e3127e64d7f08bd",
-      "path": ".claude/verify-harness.sh"
-    },
-    ".claude/regen-harness.sh": {
-      "origin_hash": "888ee29fd7a5312d2662abdb447ca94feaed57249287510d8227ec8a6ee186ee",
-      "path": ".claude/regen-harness.sh"
-    }
+    "AGENTS.md": { "origin_hash": "<pending>", "path": "AGENTS.md" },
+    ".claude/settings.json": { "origin_hash": "<pending>", "path": ".claude/settings.json" },
+    ".claude/hooks/verify.sh": { "origin_hash": "<pending>", "path": ".claude/hooks/verify.sh" },
+    ".claude/skills/next-verify/SKILL.md": { "origin_hash": "<pending>", "path": ".claude/skills/next-verify/SKILL.md" },
+    ".claude/skills/supabase-migrate/SKILL.md": { "origin_hash": "<pending>", "path": ".claude/skills/supabase-migrate/SKILL.md" },
+    "lefthook.yml": { "origin_hash": "<pending>", "path": "lefthook.yml" },
+    ".lefthook/commit-msg.sh": { "origin_hash": "<pending>", "path": ".lefthook/commit-msg.sh" },
+    ".lefthook/commit-msg/commit-msg.sh": { "origin_hash": "<pending>", "path": ".lefthook/commit-msg/commit-msg.sh" },
+    ".lefthook/readme-coupling.sh": { "origin_hash": "<pending>", "path": ".lefthook/readme-coupling.sh" },
+    ".gitleaks.toml": { "origin_hash": "<pending>", "path": ".gitleaks.toml" },
+    ".github/workflows/ci.yml": { "origin_hash": "<pending>", "path": ".github/workflows/ci.yml" },
+    ".claude/verify-harness.sh": { "origin_hash": "<pending>", "path": ".claude/verify-harness.sh" },
+    ".claude/regen-harness.sh": { "origin_hash": "<pending>", "path": ".claude/regen-harness.sh" }
   }
 }
