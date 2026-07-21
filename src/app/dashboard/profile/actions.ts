@@ -14,7 +14,9 @@ import { revalidatePath } from 'next/cache';
 /**
  * Update the vendor's shared stall name. Persisted in merqo.vendor_profile
  * (shared across every kit — docs/business/2026-07-21-profile-settings-page-standard.md)
- * via the upsert_vendor_profile RPC, not stockkit's local vendors.name.
+ * via the upsert_vendor_profile RPC — the source of truth — then mirrored
+ * into stockkit's local vendors.name so the dashboard nav (which reads only
+ * the local column) reflects the new name right away.
  */
 export async function updateStallName(input: ProfileNameInput): Promise<ActionResult> {
   const parsed = profileNameSchema.safeParse(input);
@@ -36,6 +38,19 @@ export async function updateStallName(input: ProfileNameInput): Promise<ActionRe
   } catch (err) {
     console.error('updateStallName failed', err instanceof Error ? err.message : err);
     return { success: false, error: 'Could not save stall name' };
+  }
+
+  // Secondary sync-write: keep the local vendors.name display cache in step
+  // with the shared merqo.vendor_profile row (the source of truth, written
+  // above) so the dashboard nav's read path — vendors.name, unchanged — shows
+  // the new name immediately. The shared write already succeeded, so a
+  // failure here is logged but not surfaced as an error to the vendor.
+  const { error: localSyncError } = await supabase
+    .from('vendors')
+    .update({ name: parsed.data.name })
+    .eq('id', user.id);
+  if (localSyncError) {
+    console.error('updateStallName local sync failed', localSyncError.message);
   }
 
   revalidatePath('/dashboard', 'layout');
