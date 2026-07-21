@@ -50,16 +50,21 @@ CREATE TRIGGER products_updated_at
   BEFORE UPDATE ON stockkit.products
   FOR EACH ROW EXECUTE FUNCTION stockkit.update_updated_at();
 
--- KNOWN GAP: this migration defines RLS + policies for vendors/products/
--- stock_movements but never GRANTs table-level privileges (SELECT/INSERT/
--- UPDATE/DELETE) to authenticated/service_role on these tables — only 0000
--- grants schema USAGE. RLS policies are necessary but not sufficient;
--- without a matching GRANT, Postgres denies access before RLS is even
--- evaluated ("permission denied for table ..."). Confirmed during a prior
--- review; never exercised because no live Supabase project exists in this
--- dev environment yet. Deliberately not fixed here — adding the GRANTs is a
--- real behavior change needing its own decision/testing, not a documentation
--- fix.
+-- Schema-level USAGE is already granted in 0000_create_stockkit_schema.sql.
+-- RLS + policy alone is not enough — Postgres also checks the table-level
+-- privilege grant before it ever evaluates a policy, so without these an
+-- authenticated vendor's insert/select/update fails with "permission denied
+-- for table ..." even though the policies below would allow it. Matches the
+-- grant pattern used in 0004_feedback.sql (grant the exact operations each
+-- table's policies actually allow; service_role always gets `all`).
+grant select, insert, update on stockkit.vendors to authenticated;
+grant all on stockkit.vendors to service_role;
+
+grant select, insert, update, delete on stockkit.products to authenticated;
+grant all on stockkit.products to service_role;
+
+grant select, insert on stockkit.stock_movements to authenticated;
+grant all on stockkit.stock_movements to service_role;
 
 -- ── Row Level Security ───────────────────────────────────────────────────────
 
