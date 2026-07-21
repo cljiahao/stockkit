@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { SocialLinksInput } from '@/lib/schemas';
+import { profileNameSchema, socialLinksSchema, type SocialLinksInput } from '@/lib/schemas';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { updateSocialLinks, updateStallName } from './actions';
@@ -21,16 +21,28 @@ export function ProfileForm({ stallName, socialLinks }: Props) {
   const [linksPending, setLinksPending] = useState(false);
 
   async function saveName() {
+    const parsed = profileNameSchema.safeParse({ name });
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]?.message ?? 'Invalid stall name');
+      return;
+    }
+
     setNamePending(true);
-    const res = await updateStallName({ name });
+    const res = await updateStallName(parsed.data);
     setNamePending(false);
     if (!res.success) return toast.error(res.error);
     toast.success('Stall name saved');
   }
 
   async function saveLinks() {
+    const parsed = socialLinksSchema.safeParse(links);
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]?.message ?? 'Invalid links');
+      return;
+    }
+
     setLinksPending(true);
-    const res = await updateSocialLinks(links);
+    const res = await updateSocialLinks(parsed.data);
     setLinksPending(false);
     if (!res.success) return toast.error(res.error);
     toast.success('Links saved');
