@@ -109,6 +109,38 @@ supabase/migrations/              — SQL schema + RLS + record_stock_movement/s
   one deliberate typographic signature (a "ledger" motif). Don't drop it on
   new numeric displays.
 
+## AI Harness
+
+PreToolUse: blocks secret files (exit 2): `.env*` (except `.env.example`),
+cert files (`.pem`/`.key`/`.p12`/`.pfx`/`.secret`), `credentials.json`/`.netrc`/`.secrets`;
+and blocks `--no-verify`. App code, skills, specs, and `.github/workflows/`
+unrestricted.
+UserPromptSubmit: pattern-checks prompts for injection phrases; exit 2 blocks.
+PostToolUse: `tsc --noEmit --incremental` after every Edit/Write. Feedback-only.
+Stop: exits 0 when `stop_hook_active` (no re-entry loop); else runs the test
+suite, exit 2 feeds failures back, exit 0 on pass.
+SessionStart (startup|resume|compact): re-injects first 30 lines of this file.
+`permissions`: max-privilege — bare-tool `allow` (Bash/Read/Edit/Write/web/Skill/
+Task) so common work doesn't prompt; `deny` covers secret reads/edits and
+irreversible ops (`rm -rf`, `git push --force`/`-f`, `git reset --hard`,
+`git clean -fd/-fx`, `git filter-branch`, ref-delete). `ask` gates `Edit(...)`
+on the medium-security governance files: `AGENTS.md`, `CLAUDE.md`,
+`.claude/harness.json`, `.claude/settings.json`, `.claude/settings.local.json`.
+Deny always wins; it's a guardrail, not a sandbox.
+Git hooks (lefthook): pre-commit runs format/lint/typecheck + gitleaks
+secret-scan on staged files, plus a readme-coupling staleness warning;
+commit-msg enforces Conventional Commits; pre-push runs the harness
+integrity check + quality gate.
+CI (GitHub Actions): hard gate on changed-line coverage (`diff-cover`
+≥80%), lockfile-in-sync (`--frozen-lockfile`), a changelog-touched check, a
+readme-freshness check, harness integrity, a `db` job (pgTAP RLS suite), and
+(via `security.yml`) a full-history gitleaks scan + `pnpm audit` + a
+dormant self-skipping CodeQL job. No `mutation` job (no Stryker config) and
+no `e2e` job (no Playwright suite) — both out of scope for this pass.
+RLS isolation: `supabase/tests/rls.test.sql` via `supabase test db`.
+Project skills (directory form, `<name>/SKILL.md`): `.claude/skills/` |
+Manifest: `.claude/harness.json`
+
 ## Project-Specific Notes
 
 - No live Supabase project is configured in the dev/CI environment this app
@@ -121,6 +153,3 @@ supabase/migrations/              — SQL schema + RLS + record_stock_movement/s
   deliberately distinct from qkit's warm ember and loopkit's gold. Green/
   amber/red (`--stock-ok`/`--stock-low`/`--stock-out`) are reserved for
   stock-level status only — never reused as the brand accent.
-- No `.claude/` harness, no e2e suite, no `docs/` tree exist yet in this repo
-  (unlike qkit) — this file intentionally omits an "AI Harness" section until
-  one is actually built.
