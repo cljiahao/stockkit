@@ -5,7 +5,7 @@ Date: 2026-07-22
 ## Problem
 
 The landing/login parity pass (merged in #1) gave stockkit the right
-*structure* — Hero/HowItWorks/Benefits/Faq/Cta as separate components,
+_structure_ — Hero/HowItWorks/Benefits/Faq/Cta as separate components,
 matching qkit/loopkit/paykit's file shape. But the user's follow-up feedback
 is that the page still isn't visually pleasing: it's flat. Structural parity
 alone didn't close the gap — qkit and loopkit each layer real visual polish
@@ -25,13 +25,14 @@ on top of that structure that stockkit's landing page has none of:
   top of a new ambient-gradient background.
 
 Research basis: a fork read qkit's `hero-preview-carousel.tsx`, `ticket.tsx`
-+ its scallop/ambient-gradient CSS, `featured-booths.tsx`, and its
-`docs/superpowers/specs/2026-06-16-landing-refresh-design.md`; and loopkit's
-`stamp-card.tsx`, `nav.tsx`, `benefits.tsx`, `how-it-works.tsx`, and its
-`fade-rise` animation and documented (BMC Psychology 2025 / Royal Society
-Open Science 2023-cited) color-brightness rationale. Full findings summarized
-in the design conversation; not re-duplicated here — the "Design" section
-below states the conclusions.
+
+- its scallop/ambient-gradient CSS, `featured-booths.tsx`, and its
+  `docs/superpowers/specs/2026-06-16-landing-refresh-design.md`; and loopkit's
+  `stamp-card.tsx`, `nav.tsx`, `benefits.tsx`, `how-it-works.tsx`, and its
+  `fade-rise` animation and documented (BMC Psychology 2025 / Royal Society
+  Open Science 2023-cited) color-brightness rationale. Full findings summarized
+  in the design conversation; not re-duplicated here — the "Design" section
+  below states the conclusions.
 
 Out of scope: no changes to the color palette itself (light/dark `--primary`
 etc. were just finalized in #1), no changes to landing copy content, no
@@ -42,12 +43,13 @@ RLS/data model.
 
 **Reusable techniques** (hue/motif-agnostic, legitimate to bring to
 stockkit):
+
 - Ambient body background (two radial gradients + `background-attachment:
-  fixed`) — retint with stockkit's own cobalt primary.
+fixed`) — retint with stockkit's own cobalt primary.
 - A concrete hero visual instead of text-only.
 - Icons on Benefits/HowItWorks items.
 - Numbered step markers (`01/02/03` mono + rule + icon) — justified here
-  specifically because HowItWorks *is* a real sequence (add products → log
+  specifically because HowItWorks _is_ a real sequence (add products → log
   stock → watch numbers), not decoration for its own sake (per the
   `frontend-design` skill's explicit warning against numbering that doesn't
   encode real sequence).
@@ -55,6 +57,7 @@ stockkit):
 - Lifted-shadow cards instead of plain `border p-6`.
 
 **Brand-specific — not copied:**
+
 - qkit's perforated `.ticket` scallop (booth/receipt motif) and kraft-paper
   noise texture.
 - loopkit's `StampCard` illustration concept and its `--gold` accent color.
@@ -91,7 +94,7 @@ mirroring qkit's own `.font-display` pattern.
 
 Rationale: Space Grotesk is a display sibling of Space Mono, so it shares
 letterform DNA with stockkit's existing `font-mono` ledger numerals instead
-of fighting them — a typeface choice made *for this brief specifically*
+of fighting them — a typeface choice made _for this brief specifically_
 (precise/financial/ledger tone), not qkit's warm-editorial serif or
 loopkit's rounded grotesque.
 
@@ -125,6 +128,7 @@ New component `src/components/landing/ledger-card-preview.tsx`: a static
 mock product card (not real data — a marketing illustration, same
 non-interactive-mock approach as loopkit's `StampCard`) built on
 `ElevatedCard`, showing:
+
 - Product name + a stock-status dot (reusing `--stock-ok`/`--color-stock-ok`
   — this **is** a stock-status indicator, a legitimate use of that reserved
   token, not a decorative reuse)

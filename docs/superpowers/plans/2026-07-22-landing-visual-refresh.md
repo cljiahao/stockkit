@@ -14,7 +14,7 @@
 - Comment hygiene: own-line comments only, never trailing inline comments; no dead/commented-out code.
 - No changes to RLS, the data model, `stock_movements`, page structure/section order, landing copy content, or the color palette itself (`--primary` etc. were finalized in the prior PR) — only markup/styling additions.
 - `font-mono` stays reserved for quantity/cost figures — `LedgerCardPreview`'s on-hand count and unit cost correctly use it; nothing else on the landing page should start using it decoratively.
-- Stock-status tokens (`--stock-ok/-low/-out`, `STOCK_STATUS_DOT_CLASS` etc. from `src/lib/stock.ts`) stay reserved for actual stock-status signals — `LedgerCardPreview`'s status dot is a legitimate use (it *is* showing a stock status), nothing else on the page should reuse those colors decoratively.
+- Stock-status tokens (`--stock-ok/-low/-out`, `STOCK_STATUS_DOT_CLASS` etc. from `src/lib/stock.ts`) stay reserved for actual stock-status signals — `LedgerCardPreview`'s status dot is a legitimate use (it _is_ showing a stock status), nothing else on the page should reuse those colors decoratively.
 - No scroll-triggered animation library — `fade-rise` is a mount-triggered CSS animation only, wrapped in `prefers-reduced-motion: reduce`.
 - Vitest: `globals: false` (import `describe/it/expect` explicitly from `vitest`), `// @vitest-environment jsdom` required as the first line of any test that renders a component, no `jest-dom` matchers available (use `.toBeTruthy()`/`.toHaveProperty(...)`/`.getAttribute(...)`, not `toBeInTheDocument()`/`toHaveAttribute()`).
 - The existing tests for `Hero`, `HowItWorks`, `Benefits`, and `Cta` (all in `src/components/landing/`) must continue to pass **unmodified** — every task below preserves the exact heading text and link text/hrefs those tests assert on. If a step in this plan would require editing one of those four existing test files, stop and treat that as a signal something drifted from spec — do not silently rewrite the assertions.
@@ -24,10 +24,12 @@
 ## Task 1: Typography, ambient background, and motion foundations
 
 **Files:**
+
 - Modify: `src/app/layout.tsx`
 - Modify: `src/app/globals.css`
 
 **Interfaces:**
+
 - Produces: CSS custom property `--font-display` (usable via Tailwind's `font-display` utility class, mirroring how `--font-mono`/`font-mono` already work); CSS custom properties `--gradient-wash-1`/`--gradient-wash-2` (theme-scoped, consumed only by the `body` background — not intended for direct use elsewhere); a `.fade-rise` utility class.
 - Consumed by: Tasks 2–7 (`.font-display` on every landing/nav heading, `.fade-rise` on Hero content, `LedgerCardPreview`, and the HowItWorks/Benefits cards).
 
@@ -66,16 +68,16 @@ Add `${spaceGrotesk.variable}` to the `body` className template string:
 In `src/app/globals.css`, in the `@theme inline` block, add a line directly after `--font-mono: var(--font-geist-mono);`:
 
 ```css
-  --font-display: var(--font-space-grotesk);
+--font-display: var(--font-space-grotesk);
 ```
 
 In the `@layer utilities` block, add a new utility (anywhere among the existing ones, e.g. after `.text-brand-gradient`):
 
 ```css
-  .font-display {
-    font-family: var(--font-display);
-    letter-spacing: -0.01em;
-  }
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
 ```
 
 - [ ] **Step 3: Add the ambient-background gradient tokens**
@@ -83,15 +85,15 @@ In the `@layer utilities` block, add a new utility (anywhere among the existing 
 In `src/app/globals.css`'s `:root` block, add two new lines directly after `--stock-out: oklch(0.58 0.2 27);`:
 
 ```css
-  --gradient-wash-1: oklch(0.46 0.16 255 / 0.06);
-  --gradient-wash-2: oklch(0.46 0.16 255 / 0.04);
+--gradient-wash-1: oklch(0.46 0.16 255 / 0.06);
+--gradient-wash-2: oklch(0.46 0.16 255 / 0.04);
 ```
 
 In the `.dark` block, add directly after `--stock-out: oklch(0.62 0.2 27);`:
 
 ```css
-  --gradient-wash-1: oklch(0.68 0.13 252 / 0.1);
-  --gradient-wash-2: oklch(0.68 0.13 252 / 0.07);
+--gradient-wash-1: oklch(0.68 0.13 252 / 0.1);
+--gradient-wash-2: oklch(0.68 0.13 252 / 0.07);
 ```
 
 - [ ] **Step 4: Apply the gradients to `body`**
@@ -99,21 +101,21 @@ In the `.dark` block, add directly after `--stock-out: oklch(0.62 0.2 27);`:
 In `src/app/globals.css`'s `@layer base` block, replace:
 
 ```css
-  body {
-    @apply bg-background text-foreground;
-  }
+body {
+  @apply bg-background text-foreground;
+}
 ```
 
 with:
 
 ```css
-  body {
-    @apply bg-background text-foreground;
-    background-image:
-      radial-gradient(ellipse 70% 45% at 15% -10%, var(--gradient-wash-1), transparent 60%),
-      radial-gradient(ellipse 55% 40% at 100% 0%, var(--gradient-wash-2), transparent 55%);
-    background-attachment: fixed;
-  }
+body {
+  @apply bg-background text-foreground;
+  background-image:
+    radial-gradient(ellipse 70% 45% at 15% -10%, var(--gradient-wash-1), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 100% 0%, var(--gradient-wash-2), transparent 55%);
+  background-attachment: fixed;
+}
 ```
 
 - [ ] **Step 5: Add the `fade-rise` animation**
@@ -173,10 +175,12 @@ EOF
 ## Task 2: `LedgerCardPreview` component + test
 
 **Files:**
+
 - Create: `src/components/landing/ledger-card-preview.tsx`
 - Create: `src/components/landing/ledger-card-preview.dom.test.tsx`
 
 **Interfaces:**
+
 - Produces: `LedgerCardPreview()` — a static, non-interactive marketing illustration (no props).
 - Consumes: `ElevatedCard` (`@/components/elevated-card`), `STOCK_STATUS_DOT_CLASS` (`@/lib/stock`), `cn` (`@/lib/utils`).
 - Consumed by: Task 3's `Hero`.
@@ -278,9 +282,11 @@ git commit -m "feat: add LedgerCardPreview, stockkit's hero illustration"
 ## Task 3: `Hero` — two-column layout, trust strip, ledger illustration
 
 **Files:**
+
 - Modify: `src/components/landing/hero.tsx`
 
 **Interfaces:**
+
 - Consumes: `LedgerCardPreview` (Task 2).
 - No change to `Hero`'s own props or exported signature (`{ authed?: boolean }` unchanged) — the existing `hero.dom.test.tsx` must pass unmodified.
 
@@ -363,9 +369,11 @@ git commit -m "feat: give Hero a two-column layout with the ledger illustration 
 ## Task 4: `HowItWorks` — icons, numbering, lifted cards
 
 **Files:**
+
 - Modify: `src/components/landing/how-it-works.tsx`
 
 **Interfaces:**
+
 - Consumes: `ElevatedCard` (`@/components/elevated-card`), `lucide-react` icons.
 - No change to `HowItWorks`'s exported signature or step titles — the existing `how-it-works.dom.test.tsx` must pass unmodified.
 
@@ -449,9 +457,11 @@ git commit -m "feat: add icons and 01/02/03 numbering to HowItWorks"
 ## Task 5: `Benefits` — icons, lifted cards
 
 **Files:**
+
 - Modify: `src/components/landing/benefits.tsx`
 
 **Interfaces:**
+
 - Consumes: `ElevatedCard` (`@/components/elevated-card`), `lucide-react` icons.
 - No change to `Benefits`'s exported signature or item titles — the existing `benefits.dom.test.tsx` must pass unmodified.
 
@@ -529,10 +539,12 @@ git commit -m "feat: add icons and lifted cards to Benefits"
 ## Task 6: `Faq` and `Cta` — display typeface on headings
 
 **Files:**
+
 - Modify: `src/components/landing/faq.tsx`
 - Modify: `src/components/landing/cta.tsx`
 
 **Interfaces:**
+
 - Consumes: `.font-display` (Task 1). No prop/behavior changes to either component — existing `cta.dom.test.tsx` must pass unmodified (`Faq` has no test).
 
 - [ ] **Step 1: Update `Faq`'s heading**
@@ -540,13 +552,13 @@ git commit -m "feat: add icons and lifted cards to Benefits"
 In `src/components/landing/faq.tsx`, change:
 
 ```tsx
-      <h2 className="mb-10 text-center text-3xl font-semibold">Questions</h2>
+<h2 className="mb-10 text-center text-3xl font-semibold">Questions</h2>
 ```
 
 to:
 
 ```tsx
-      <h2 className="font-display mb-10 text-center text-3xl font-semibold">Questions</h2>
+<h2 className="font-display mb-10 text-center text-3xl font-semibold">Questions</h2>
 ```
 
 - [ ] **Step 2: Update `Cta`'s heading**
@@ -554,13 +566,13 @@ to:
 In `src/components/landing/cta.tsx`, change:
 
 ```tsx
-        <h2 className="text-3xl font-semibold">Know your numbers before you run out.</h2>
+<h2 className="text-3xl font-semibold">Know your numbers before you run out.</h2>
 ```
 
 to:
 
 ```tsx
-        <h2 className="font-display text-3xl font-semibold">Know your numbers before you run out.</h2>
+<h2 className="font-display text-3xl font-semibold">Know your numbers before you run out.</h2>
 ```
 
 - [ ] **Step 3: Run the existing Cta test to confirm it still passes unmodified**
@@ -585,10 +597,12 @@ git commit -m "feat: apply display typeface to Faq and Cta headings"
 ## Task 7: `Navbar` — sticky translucent bar
 
 **Files:**
+
 - Modify: `src/components/layout/navbar.tsx`
 - Create: `src/components/layout/navbar.dom.test.tsx`
 
 **Interfaces:**
+
 - No change to `Navbar`'s exported signature (`{ authed?: boolean }` unchanged) — only markup/styling changes plus a new test (none existed before).
 
 - [ ] **Step 1: Write the failing test**
@@ -615,9 +629,7 @@ describe('Navbar', () => {
 
   it('shows Dashboard when signed in', () => {
     render(<Navbar authed />);
-    expect(screen.getByRole('link', { name: 'Dashboard' }).getAttribute('href')).toBe(
-      '/dashboard'
-    );
+    expect(screen.getByRole('link', { name: 'Dashboard' }).getAttribute('href')).toBe('/dashboard');
   });
 });
 ```
