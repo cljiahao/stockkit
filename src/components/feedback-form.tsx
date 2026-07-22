@@ -1,10 +1,10 @@
 'use client';
+import { submitFeedbackAction } from '@/app/actions/feedback';
+import { Button } from '@/components/ui/button';
+import { feedbackSchema } from '@/lib/schemas';
+import { cn } from '@/lib/utils';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { submitFeedbackAction } from '@/app/actions/feedback';
-import { feedbackSchema } from '@/lib/schemas';
 
 /** Vendor NPS + optional comment widget, ported from Merqo's own hub-level
  *  FeedbackForm. Designed to be mounted in a Sheet off the account menu
@@ -40,18 +40,22 @@ export function FeedbackForm() {
 
   if (sent) {
     return (
-      <div className="rounded-xl border bg-card px-4 py-3 text-center text-sm text-muted-foreground">
+      <div className="bg-card text-muted-foreground rounded-xl border px-4 py-3 text-center text-sm">
         Thanks for the feedback — it helps us improve.
       </div>
     );
   }
 
   return (
-    <div className="space-y-3 rounded-xl border bg-card p-4">
+    <div className="bg-card space-y-3 rounded-xl border p-4">
       <p className="text-sm font-medium">
         How likely are you to recommend stockkit to another vendor?
       </p>
-      <div className="grid grid-cols-11 gap-1" role="radiogroup" aria-label="Recommend score, 0 to 10">
+      <div
+        className="grid grid-cols-11 gap-1"
+        role="radiogroup"
+        aria-label="Recommend score, 0 to 10"
+      >
         {Array.from({ length: 11 }, (_, n) => (
           <button
             key={n}
@@ -64,14 +68,14 @@ export function FeedbackForm() {
               'flex aspect-square items-center justify-center rounded-md border text-sm font-semibold tabular-nums transition-colors',
               score === n
                 ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-border text-muted-foreground hover:border-primary/50 hover:bg-primary/5',
+                : 'border-border text-muted-foreground hover:border-primary/50 hover:bg-primary/5'
             )}
           >
             {n}
           </button>
         ))}
       </div>
-      <div className="flex justify-between text-[11px] font-medium text-muted-foreground">
+      <div className="text-muted-foreground flex justify-between text-[11px] font-medium">
         <span>Not likely</span>
         <span>Very likely</span>
       </div>
@@ -82,9 +86,14 @@ export function FeedbackForm() {
         placeholder="Anything we can improve? (optional)"
         rows={3}
         maxLength={2000}
-        className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        className="bg-background focus-visible:ring-ring/50 w-full rounded-lg border px-3 py-2 text-sm outline-none focus-visible:ring-[3px]"
       />
-      <Button type="button" className="h-11 w-full rounded-xl font-semibold" onClick={send} disabled={pending}>
+      <Button
+        type="button"
+        className="h-11 w-full rounded-xl font-semibold"
+        onClick={send}
+        disabled={pending}
+      >
         {pending ? 'Sending…' : 'Send feedback'}
       </Button>
     </div>
