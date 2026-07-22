@@ -73,8 +73,8 @@ export function DashboardNav({ vendorName }: Props) {
               {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
             <Link href={PAGE_ROUTES.DASHBOARD} className="text-xl font-bold tracking-tight">
-              <span className="text-primary">stock</span>
-              <span>kit</span>
+              <span className="text-primary">Stock</span>
+              <span>Kit</span>
             </Link>
           </div>
 

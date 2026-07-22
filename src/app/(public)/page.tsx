@@ -15,12 +15,12 @@ export default async function Home() {
   const authed = !!user;
 
   return (
-    <>
+    <div id="top">
       <Hero authed={authed} />
       <HowItWorks />
       <Benefits />
       <Faq />
       <Cta authed={authed} />
-    </>
+    </div>
   );
 }
