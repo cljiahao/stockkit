@@ -24,15 +24,15 @@ values
 
 insert into stockkit.products (id, vendor_id, name, unit_cost_cents, on_hand, low_stock_threshold)
 values
-  ('00000000-0000-0000-0000-0000000p0001', '00000000-0000-0000-0000-00000000000a', 'A Product', 100, 10, 2),
-  ('00000000-0000-0000-0000-0000000p0002', '00000000-0000-0000-0000-00000000000b', 'B Product', 200, 5, 1);
+  ('00000000-0000-0000-0000-0000000c0001', '00000000-0000-0000-0000-00000000000a', 'A Product', 100, 10, 2),
+  ('00000000-0000-0000-0000-0000000c0002', '00000000-0000-0000-0000-00000000000b', 'B Product', 200, 5, 1);
 
 insert into stockkit.stock_movements (id, vendor_id, product_id, delta, reason)
 values
-  ('00000000-0000-0000-0000-0000000m0001', '00000000-0000-0000-0000-00000000000a',
-   '00000000-0000-0000-0000-0000000p0001', 10, 'initial'),
-  ('00000000-0000-0000-0000-0000000m0002', '00000000-0000-0000-0000-00000000000b',
-   '00000000-0000-0000-0000-0000000p0002', 5, 'initial');
+  ('00000000-0000-0000-0000-0000000d0001', '00000000-0000-0000-0000-00000000000a',
+   '00000000-0000-0000-0000-0000000c0001', 10, 'initial'),
+  ('00000000-0000-0000-0000-0000000d0002', '00000000-0000-0000-0000-00000000000b',
+   '00000000-0000-0000-0000-0000000c0002', 5, 'initial');
 
 -- ── RLS is actually enabled on every protected table ─────────────────────────
 select ok((select relrowsecurity from pg_class where oid = 'stockkit.vendors'::regclass), 'RLS on vendors');
@@ -60,13 +60,13 @@ select lives_ok(
 
 -- products: vendor-all, WITH CHECK closes the re-point escalation
 select isnt_empty(
-  $$ select 1 from stockkit.products where id = '00000000-0000-0000-0000-0000000p0001' $$,
+  $$ select 1 from stockkit.products where id = '00000000-0000-0000-0000-0000000c0001' $$,
   'A reads its own product');
 select is_empty(
-  $$ select 1 from stockkit.products where id = '00000000-0000-0000-0000-0000000p0002' $$,
+  $$ select 1 from stockkit.products where id = '00000000-0000-0000-0000-0000000c0002' $$,
   'A cannot read B''s product');
 select lives_ok(
-  $$ update stockkit.products set name = 'A Renamed Product' where id = '00000000-0000-0000-0000-0000000p0001' $$,
+  $$ update stockkit.products set name = 'A Renamed Product' where id = '00000000-0000-0000-0000-0000000c0001' $$,
   'A can update its own product');
 -- Not throws_ok: authenticated has table-level UPDATE granted on products, so
 -- the grant check passes. products_vendor_all's USING clause then filters
@@ -76,7 +76,7 @@ select lives_ok(
 -- identical cross-vendor UPDATE case.
 with upd as (
   update stockkit.products set name = 'hijack'
-  where id = '00000000-0000-0000-0000-0000000p0002'
+  where id = '00000000-0000-0000-0000-0000000c0002'
   returning 1)
 select is((select count(*)::int from upd), 0, 'A cannot update B''s product');
 select throws_ok(
@@ -87,28 +87,28 @@ select throws_ok(
 
 -- stock_movements: vendor select/insert only, no update/delete for anyone
 select isnt_empty(
-  $$ select 1 from stockkit.stock_movements where id = '00000000-0000-0000-0000-0000000m0001' $$,
+  $$ select 1 from stockkit.stock_movements where id = '00000000-0000-0000-0000-0000000d0001' $$,
   'A reads its own stock movement');
 select is_empty(
-  $$ select 1 from stockkit.stock_movements where id = '00000000-0000-0000-0000-0000000m0002' $$,
+  $$ select 1 from stockkit.stock_movements where id = '00000000-0000-0000-0000-0000000d0002' $$,
   'A cannot read B''s stock movement');
 select lives_ok(
   $$ insert into stockkit.stock_movements (vendor_id, product_id, delta, reason)
-     values ('00000000-0000-0000-0000-00000000000a', '00000000-0000-0000-0000-0000000p0001', -2, 'waste') $$,
+     values ('00000000-0000-0000-0000-00000000000a', '00000000-0000-0000-0000-0000000c0001', -2, 'waste') $$,
   'A can insert its own stock movement');
 select throws_ok(
   $$ insert into stockkit.stock_movements (vendor_id, product_id, delta, reason)
-     values ('00000000-0000-0000-0000-00000000000b', '00000000-0000-0000-0000-0000000p0002', 1, 'restock') $$,
+     values ('00000000-0000-0000-0000-00000000000b', '00000000-0000-0000-0000-0000000c0002', 1, 'restock') $$,
   '42501',
   null,
   'A cannot insert a stock movement as B');
 select throws_ok(
-  $$ update stockkit.stock_movements set delta = 999 where id = '00000000-0000-0000-0000-0000000m0001' $$,
+  $$ update stockkit.stock_movements set delta = 999 where id = '00000000-0000-0000-0000-0000000d0001' $$,
   '42501',
   null,
   'A cannot update its own stock movement (append-only, no UPDATE grant)');
 select throws_ok(
-  $$ delete from stockkit.stock_movements where id = '00000000-0000-0000-0000-0000000m0001' $$,
+  $$ delete from stockkit.stock_movements where id = '00000000-0000-0000-0000-0000000d0001' $$,
   '42501',
   null,
   'A cannot delete its own stock movement (append-only, no DELETE grant)');
