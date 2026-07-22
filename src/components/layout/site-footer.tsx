@@ -5,17 +5,17 @@ interface SiteFooterProps {
   links?: LinkItem[];
 }
 
-const defaultLinks: LinkItem[] = [{ label: 'Contact Us', href: '#' }];
+const defaultLinks: LinkItem[] = [];
 
 export function SiteFooter({
-  creditText = 'Built with stockkit',
+  creditText = '© 2026 stockkit · a Merqo kit',
   links = defaultLinks,
 }: SiteFooterProps) {
   return (
     <footer className="bg-foreground w-full">
       <div className="flex-between px-6 py-6">
         <p className="text-background text-sm">{creditText}</p>
-        <LinkList links={links} className="text-background text-sm" />
+        {links.length > 0 && <LinkList links={links} className="text-background text-sm" />}
       </div>
     </footer>
   );
