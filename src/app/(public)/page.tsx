@@ -41,8 +41,7 @@ export default function Home() {
           <span>kit</span>
         </h1>
         <p className="text-muted-foreground max-w-md text-lg">
-          Track stock in and out, and know what every product actually costs
-          you.
+          Track stock in and out, and know what every product actually costs you.
         </p>
         <Button asChild size="lg" className="mt-2">
           <Link href="/login">Get started</Link>
@@ -50,48 +49,36 @@ export default function Home() {
       </div>
 
       <section id="how" className="mx-auto max-w-5xl px-5 py-14">
-        <h2 className="mb-10 text-center text-3xl font-semibold">
-          Up and running in three steps
-        </h2>
+        <h2 className="mb-10 text-center text-3xl font-semibold">Up and running in three steps</h2>
         <div className="grid gap-5 sm:grid-cols-3">
           {STEPS.map((step, i) => (
             <div key={step.title} className="rounded-2xl border p-6">
-              <p className="font-mono text-xs text-muted-foreground">
-                Step {i + 1}
-              </p>
+              <p className="text-muted-foreground font-mono text-xs">Step {i + 1}</p>
               <h3 className="mt-1 text-xl font-semibold">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {step.body}
-              </p>
+              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{step.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       <section id="faq" className="mx-auto max-w-3xl px-5 py-16">
-        <h2 className="mb-10 text-center text-3xl font-semibold">
-          Questions
-        </h2>
+        <h2 className="mb-10 text-center text-3xl font-semibold">Questions</h2>
         <div className="space-y-3">
           {FAQ.map((item) => (
             <details
               key={item.q}
-              className="group overflow-hidden rounded-xl border bg-card open:border-primary/50"
+              className="group bg-card open:border-primary/50 overflow-hidden rounded-xl border"
             >
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-inset">
-                <span className="text-base font-semibold leading-snug">
-                  {item.q}
-                </span>
+              <summary className="focus-visible:ring-primary/50 flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 outline-none focus-visible:ring-2 focus-visible:ring-inset">
+                <span className="text-base leading-snug font-semibold">{item.q}</span>
                 <span
                   aria-hidden
-                  className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border text-lg leading-none text-muted-foreground transition-transform group-open:rotate-45"
+                  className="text-muted-foreground mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border text-lg leading-none transition-transform group-open:rotate-45"
                 >
                   +
                 </span>
               </summary>
-              <div className="px-5 pb-5 text-sm leading-relaxed text-foreground/80">
-                {item.a}
-              </div>
+              <div className="text-foreground/80 px-5 pb-5 text-sm leading-relaxed">{item.a}</div>
             </details>
           ))}
         </div>
