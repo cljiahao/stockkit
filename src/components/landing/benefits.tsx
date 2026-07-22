@@ -1,7 +1,7 @@
 const BENEFITS = [
   {
     title: 'Always know your on-hand count',
-    body: 'Every restock, sale, and adjustment updates a running balance per product — no more counting shelves to find out what you actually have.',
+    body: 'Every restock, waste, and adjustment updates a running balance per product — no more counting shelves to find out what you actually have.',
   },
   {
     title: "See what it's really costing you",
