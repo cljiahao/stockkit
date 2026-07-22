@@ -12,12 +12,14 @@ React Hook Form · Zod · Vitest · pnpm.
 
 ## Routes
 
-| Route                 | Who           | Purpose                                                       |
-| --------------------- | ------------- | ------------------------------------------------------------- |
-| `/`                   | anyone        | landing page, links to `/login`                               |
-| `/login`              | anyone        | Supabase email/password sign-in / sign-up                     |
-| `/dashboard`          | vendor (auth) | inventory value + low/out-of-stock stats                      |
-| `/dashboard/products` | vendor (auth) | product list; log stock, edit products, view movement history |
+| Route                 | Who           | Purpose                                                        |
+| --------------------- | ------------- | -------------------------------------------------------------- |
+| `/`                   | anyone        | landing page, links to `/login`                                |
+| `/login`              | anyone        | Supabase email/password + Google OAuth sign-in / sign-up       |
+| `/reset-password`     | anyone        | set a new password on a recovery session from `/auth/callback` |
+| `/auth/callback`      | anyone        | exchanges an OAuth/recovery code for a session, then redirects |
+| `/dashboard`          | vendor (auth) | inventory value + low/out-of-stock stats                       |
+| `/dashboard/products` | vendor (auth) | product list; log stock, edit products, view movement history  |
 
 ## Getting started
 
@@ -87,11 +89,15 @@ conventions.
 ### Contents
 
 - `scripts/check-route-logging.mjs` — pre-existing scaffold check that every API route under `src/app/api` uses the `withLogging` wrapper; still guards `src/app/api/health/route.ts`.
-- `src/app/(auth)/login/` — the combined sign-in/sign-up page (email/password only, no OAuth) and its `completeSignup` server action (creates the `vendors` row, best-effort registers the vendor into the shared `merqo.vendor_profile` table).
-- `src/app/(public)/` — the public landing page + its layout.
+- `src/app/(auth)/login/` — the combined sign-in/sign-up page (email/password + Google OAuth, plus a forgot-password flow) and its `completeSignup` server action (creates the `vendors` row, best-effort registers the vendor into the shared `merqo.vendor_profile` table).
+- `src/app/(auth)/reset-password/` — completes a password reset on the recovery session `/auth/callback` establishes.
+- `src/app/auth/callback/` — the `GET` Route Handler both Google OAuth and password-recovery links redirect through.
+- `src/app/(public)/` — the public landing page (composed from `src/components/landing/`) + its layout.
 - `src/app/api/health/` — the scaffold health-check route (logging-wrapped, used by the Dockerfile healthcheck); untouched.
 - `src/app/dashboard/` — the authenticated vendor dashboard: `layout.tsx` (resolves the session + stall name, renders `dashboard-nav.tsx`'s sign-out control), `(overview)/page.tsx` (stock-value/low/out-of-stock stats), and `products/` (the products workspace: list + detail, split across `page.tsx` (server fetch), `products-workspace.tsx` (client state/shell), `product-row.tsx`, `product-form.tsx`, `stock-log-form.tsx`, `movement-history.tsx`, `product-detail.tsx`, and `actions.ts` (the four server actions: `saveProduct`/`deleteProduct`/`recordStockMovement`/`getProductMovements`)).
 - `src/components/ui/` — shadcn primitives (CLI-managed style, hand-copied from the sibling `qkit` project where a needed one — `checkbox`/`switch`/`alert-dialog` — wasn't already present here).
+- `src/components/landing/` — the landing page's section components (`Hero`, `HowItWorks`, `Benefits`, `Faq`, `Cta`).
+- `src/components/elevated-card.tsx` — stockkit's own lifted-shadow card treatment used on the public auth pages (not qkit's perforated "Ticket").
 - `src/hooks/use-async-action.ts` — the `pending`-flag-that-always-resets hook shared by every form/action in the app.
 - `src/lib/supabase/` — the three Supabase client factories (`client.ts` browser, `server.ts` server + service-role, `middleware.ts` session refresh) plus `env.ts` (fail-fast public env validation).
 - `src/lib/{types,schemas,action-result,stock}.ts` — the `Database` type mirror of the SQL schema, Zod validation schemas + money-cents helpers, the `ActionResult<T>` server-action return type, and the shared stock-status (`ok`/`low`/`out`) classification used by both the overview stats and the products workspace.
