@@ -12,9 +12,9 @@ interface NavbarProps {
 // component: logo plus one auth-aware primary action, no client JS needed.
 export function Navbar({ authed = false }: NavbarProps) {
   return (
-    <nav className="max-w-site fixed inset-x-0 top-0 z-50 mx-auto pt-6">
-      <div className="flex-between bg-card/95 min-h-16 rounded-2xl border px-5 py-2.5 shadow-lg backdrop-blur-sm">
-        <Link href={PAGE_ROUTES.HOME} className="text-xl font-bold tracking-tight">
+    <header className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <Link href={PAGE_ROUTES.HOME} className="font-display text-xl font-bold tracking-tight">
           <span className="text-primary">stock</span>
           <span className="text-foreground">kit</span>
         </Link>
@@ -35,7 +35,7 @@ export function Navbar({ authed = false }: NavbarProps) {
             </>
           )}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }

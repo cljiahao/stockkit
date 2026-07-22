@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Landing page visual refresh: a new `Space Grotesk` display typeface on
+  every section heading, an ambient cobalt-tinted background, a `LedgerCardPreview`
+  hero illustration (mock product card — on-hand count, unit cost, a recent
+  stock movement), icons and `01/02/03` numbering on `HowItWorks`, icons on
+  `Benefits`, a restrained `fade-rise` entrance animation, and a navbar
+  restyle (floating pill → full-width sticky translucent bar).
+
 - Landing page decomposed into section components (`Hero`, `HowItWorks`,
   `Benefits`, `Faq`, `Cta`) matching the sibling kits' structure, adding a
   "why vendors pick stockkit" Benefits section stockkit didn't have before.

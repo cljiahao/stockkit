@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { LedgerCardPreview } from '@/components/landing/ledger-card-preview';
 import { Button } from '@/components/ui/button';
 import { BrandText } from '@/components/widgets';
 import { PAGE_ROUTES } from '@/lib/constants/routes';
@@ -8,24 +9,39 @@ interface HeroProps {
   authed?: boolean;
 }
 
+const TRUST = ['Free to use', 'No setup fee', 'Own your data'];
+
 export function Hero({ authed = false }: HeroProps) {
   return (
-    <div className="flex-center min-h-screen flex-col gap-6 px-6 text-center">
-      <h1 className="text-4xl font-bold tracking-tight lg:text-6xl">
-        <BrandText />
-      </h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        Track stock in and out, and know what every product actually costs you.
-      </p>
-      <div className="mt-2 flex flex-wrap justify-center gap-3">
-        <Button asChild size="lg">
-          <Link href={authed ? PAGE_ROUTES.DASHBOARD : `${PAGE_ROUTES.LOGIN}?mode=signup`}>
-            {authed ? 'Go to dashboard' : 'Get started'}
-          </Link>
-        </Button>
-        <Button asChild size="lg" variant="outline">
-          <a href="#how">See how it works</a>
-        </Button>
+    <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 lg:grid-cols-2 lg:py-28">
+      <div className="fade-rise text-center lg:text-left">
+        <h1 className="font-display text-4xl font-bold tracking-tight lg:text-6xl">
+          <BrandText />
+        </h1>
+        <p className="text-muted-foreground mx-auto mt-5 max-w-md text-lg lg:mx-0">
+          Track stock in and out, and know what every product actually costs you.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
+          <Button asChild size="lg">
+            <Link href={authed ? PAGE_ROUTES.DASHBOARD : `${PAGE_ROUTES.LOGIN}?mode=signup`}>
+              {authed ? 'Go to dashboard' : 'Get started'}
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <a href="#how">See how it works</a>
+          </Button>
+        </div>
+        <ul className="text-muted-foreground mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm lg:justify-start">
+          {TRUST.map((t) => (
+            <li key={t} className="flex items-center gap-1.5">
+              <span aria-hidden className="bg-primary/60 size-1.5 rounded-full" />
+              {t}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="fade-rise flex justify-center lg:justify-end">
+        <LedgerCardPreview />
       </div>
     </div>
   );

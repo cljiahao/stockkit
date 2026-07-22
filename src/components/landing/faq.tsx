@@ -16,7 +16,7 @@ const FAQ = [
 export function Faq() {
   return (
     <section id="faq" className="mx-auto max-w-3xl px-5 py-16">
-      <h2 className="mb-10 text-center text-3xl font-semibold">Questions</h2>
+      <h2 className="font-display mb-10 text-center text-3xl font-semibold">Questions</h2>
       <div className="space-y-3">
         {FAQ.map((item) => (
           <details
