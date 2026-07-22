@@ -14,6 +14,11 @@ export default defineConfig({
     globals: false,
     environment: 'node',
     passWithNoTests: true,
+    // Windows' default 'forks' pool occasionally crashes a worker process
+    // outright ("Worker exited unexpectedly") under load, failing the whole
+    // run despite every individual test passing. 'threads' avoids spawning
+    // separate child processes and hasn't shown the same instability.
+    pool: 'threads',
     include: ['test/**/*.{test,spec}.{ts,tsx}', 'src/**/*.test.{ts,tsx}'],
     coverage: {
       provider: 'v8',
