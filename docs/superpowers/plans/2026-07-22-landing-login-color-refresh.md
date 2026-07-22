@@ -28,9 +28,11 @@
 This repo already has uncommitted changes to three files that make the public `Navbar`/`SiteFooter` session-aware server components — this is the same feature area this plan continues, so it gets committed first as its own clean baseline. The unrelated uncommitted `.env.example` / `src/lib/utils/request-origin.ts` changes are a different in-flight task and are explicitly left alone.
 
 **Files:**
+
 - Modify (already modified, uncommitted): `src/app/(public)/layout.tsx`, `src/components/layout/navbar.tsx`, `src/components/layout/site-footer.tsx`
 
 **Interfaces:**
+
 - Produces: `Navbar({ authed?: boolean })` and `SiteFooter({ creditText?: string; links?: LinkItem[] })` — both already implemented in the working tree, this task only verifies and commits them.
 
 - [ ] **Step 1: Review the existing uncommitted diff**
@@ -75,9 +77,11 @@ EOF
 ## Task 2: Color tokens + gradient utility fix
 
 **Files:**
+
 - Modify: `src/app/globals.css`
 
 **Interfaces:**
+
 - Produces: updated `--primary`/`--primary-hover`/`--ring` CSS custom properties (light + dark), and a real two-stop `.bg-brand-gradient`/`.text-brand-gradient`. `BrandText` (`src/components/widgets/brand-text.tsx`) already consumes `.text-brand-gradient` and needs no code change — it starts rendering the new gradient automatically once this task lands.
 
 - [ ] **Step 1: Update light-mode primary tokens**
@@ -85,29 +89,29 @@ EOF
 In `src/app/globals.css`, in the `:root` block, replace:
 
 ```css
-  --primary: oklch(0.45 0.09 250);
-  --primary-foreground: oklch(0.98 0.01 240);
-  --primary-hover: oklch(0.4 0.09 250);
+--primary: oklch(0.45 0.09 250);
+--primary-foreground: oklch(0.98 0.01 240);
+--primary-hover: oklch(0.4 0.09 250);
 ```
 
 with:
 
 ```css
-  --primary: oklch(0.46 0.16 255);
-  --primary-foreground: oklch(0.98 0.01 240);
-  --primary-hover: oklch(0.42 0.16 255);
+--primary: oklch(0.46 0.16 255);
+--primary-foreground: oklch(0.98 0.01 240);
+--primary-hover: oklch(0.42 0.16 255);
 ```
 
 And further down in the same block, replace:
 
 ```css
-  --ring: oklch(0.45 0.09 250);
+--ring: oklch(0.45 0.09 250);
 ```
 
 with:
 
 ```css
-  --ring: oklch(0.46 0.16 255);
+--ring: oklch(0.46 0.16 255);
 ```
 
 - [ ] **Step 2: Update dark-mode primary tokens**
@@ -115,29 +119,29 @@ with:
 In the `.dark` block, replace:
 
 ```css
-  --primary: oklch(0.62 0.1 245);
-  --primary-foreground: oklch(0.15 0.02 250);
-  --primary-hover: oklch(0.68 0.1 245);
+--primary: oklch(0.62 0.1 245);
+--primary-foreground: oklch(0.15 0.02 250);
+--primary-hover: oklch(0.68 0.1 245);
 ```
 
 with:
 
 ```css
-  --primary: oklch(0.68 0.13 252);
-  --primary-foreground: oklch(0.15 0.02 250);
-  --primary-hover: oklch(0.74 0.13 252);
+--primary: oklch(0.68 0.13 252);
+--primary-foreground: oklch(0.15 0.02 250);
+--primary-hover: oklch(0.74 0.13 252);
 ```
 
 And replace:
 
 ```css
-  --ring: oklch(0.62 0.1 245);
+--ring: oklch(0.62 0.1 245);
 ```
 
 with:
 
 ```css
-  --ring: oklch(0.68 0.13 252);
+--ring: oklch(0.68 0.13 252);
 ```
 
 - [ ] **Step 3: Fix the dead gradient utility**
@@ -145,23 +149,23 @@ with:
 In the `@layer utilities` block, replace:
 
 ```css
-  .bg-brand-gradient {
-    @apply from-primary via-primary to-primary bg-linear-to-r;
-  }
-  .text-brand-gradient {
-    @apply from-primary via-primary to-primary bg-linear-to-r bg-clip-text text-transparent;
-  }
+.bg-brand-gradient {
+  @apply from-primary via-primary to-primary bg-linear-to-r;
+}
+.text-brand-gradient {
+  @apply from-primary via-primary to-primary bg-linear-to-r bg-clip-text text-transparent;
+}
 ```
 
 with:
 
 ```css
-  .bg-brand-gradient {
-    @apply from-primary to-primary-hover bg-linear-to-r;
-  }
-  .text-brand-gradient {
-    @apply from-primary to-primary-hover bg-linear-to-r bg-clip-text text-transparent;
-  }
+.bg-brand-gradient {
+  @apply from-primary to-primary-hover bg-linear-to-r;
+}
+.text-brand-gradient {
+  @apply from-primary to-primary-hover bg-linear-to-r bg-clip-text text-transparent;
+}
 ```
 
 - [ ] **Step 4: Build sanity check**
@@ -192,11 +196,13 @@ EOF
 ## Task 3: `passwordChangeSchema` + shared form-field classes
 
 **Files:**
+
 - Modify: `src/lib/schemas.ts`
 - Modify: `src/lib/utils/index.ts`
 - Create: `src/lib/schemas.test.ts`
 
 **Interfaces:**
+
 - Produces: `passwordChangeSchema: ZodSchema<{ password: string; confirm: string }>` and `type PasswordChangeInput`; `FORM_LABEL_CLASS: string`, `FORM_ERROR_CLASS: string`.
 - Consumed by: Task 5's reset-password form, Task 6's login form.
 
@@ -266,7 +272,8 @@ Expected: PASS (3 tests).
 In `src/lib/utils/index.ts`, add below the existing `cn` export:
 
 ```ts
-export const FORM_LABEL_CLASS = 'text-xs font-semibold uppercase tracking-wider text-muted-foreground';
+export const FORM_LABEL_CLASS =
+  'text-xs font-semibold uppercase tracking-wider text-muted-foreground';
 export const FORM_ERROR_CLASS = 'text-sm font-medium text-destructive';
 ```
 
@@ -292,10 +299,12 @@ EOF
 ## Task 4: `/auth/callback` route + test
 
 **Files:**
+
 - Create: `src/app/auth/callback/route.ts`
 - Create: `src/app/auth/callback/route.test.ts`
 
 **Interfaces:**
+
 - Produces: `GET(request: Request): Promise<Response>` — exchanges an OAuth/recovery `code` for a session, redirects to a safe relative `?next=` path (default `/dashboard`), or to `/login?error=oauth` on missing/failed exchange.
 - Consumes: `createServerClient` from `@/lib/supabase/server`, `PAGE_ROUTES` from `@/lib/constants/routes`.
 
@@ -400,7 +409,8 @@ export async function GET(request: Request) {
   // ?next=/reset-password. Only accept a same-origin relative path (leading
   // "/", not "//") so the param can't be used as an open redirect.
   const next = searchParams.get('next');
-  const safeNext = next && next.startsWith('/') && !next.startsWith('//') ? next : PAGE_ROUTES.DASHBOARD;
+  const safeNext =
+    next && next.startsWith('/') && !next.startsWith('//') ? next : PAGE_ROUTES.DASHBOARD;
 
   if (!code) return NextResponse.redirect(`${origin}${PAGE_ROUTES.LOGIN}?error=oauth`);
 
@@ -441,6 +451,7 @@ EOF
 ## Task 5: `ElevatedCard` + reset-password page/form + test
 
 **Files:**
+
 - Create: `src/components/elevated-card.tsx`
 - Modify: `src/lib/constants/routes.ts`
 - Create: `src/app/(auth)/reset-password/page.tsx`
@@ -448,6 +459,7 @@ EOF
 - Create: `src/app/(auth)/reset-password/reset-password-form.dom.test.tsx`
 
 **Interfaces:**
+
 - Produces: `ElevatedCard({ as?: 'div' | 'section'; className?: string; children: ReactNode })`; `PAGE_ROUTES.RESET_PASSWORD = '/reset-password'`; `ResetPasswordForm()`.
 - Consumes: `passwordChangeSchema` (Task 3), `useAsyncAction`/`navigatingAway` (`@/hooks`), `createClient` (`@/lib/supabase/client`).
 - Consumed by: Task 6's login form (imports `ElevatedCard` and `PAGE_ROUTES.RESET_PASSWORD`).
@@ -475,7 +487,7 @@ export function ElevatedCard({ as: As = 'div', className, children, ...props }: 
   return (
     <As
       className={cn(
-        'rounded-[20px] border bg-card shadow-[0_1px_0_0_var(--color-border),0_12px_28px_-20px_rgba(0,0,0,0.35)]',
+        'bg-card rounded-[20px] border shadow-[0_1px_0_0_var(--color-border),0_12px_28px_-20px_rgba(0,0,0,0.35)]',
         className
       )}
       {...props}
@@ -667,7 +679,7 @@ export function ResetPasswordForm() {
   if (state === 'no-session') {
     return (
       <ElevatedCard className="px-7 py-8">
-        <h1 className="text-2xl font-semibold leading-tight">This link has expired</h1>
+        <h1 className="text-2xl leading-tight font-semibold">This link has expired</h1>
         <p className="text-muted-foreground mt-2 text-sm">
           Password reset links can only be used once, and they expire after a short while. Request a
           fresh one from the sign-in page.
@@ -681,8 +693,10 @@ export function ResetPasswordForm() {
 
   return (
     <ElevatedCard className="px-7 py-8">
-      <h1 className="text-2xl font-semibold leading-tight">Set a new password</h1>
-      <p className="text-muted-foreground mt-1.5 text-sm">Pick something at least 8 characters long.</p>
+      <h1 className="text-2xl leading-tight font-semibold">Set a new password</h1>
+      <p className="text-muted-foreground mt-1.5 text-sm">
+        Pick something at least 8 characters long.
+      </p>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -758,7 +772,9 @@ export default function ResetPasswordPage() {
           <Link href={PAGE_ROUTES.HOME} className="text-3xl font-bold tracking-tight">
             <BrandText />
           </Link>
-          <p className="text-muted-foreground mt-1 text-sm">Choose a new password for your account.</p>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Choose a new password for your account.
+          </p>
         </div>
         <ResetPasswordForm />
       </div>
@@ -800,11 +816,13 @@ EOF
 ## Task 6: Login page restyle — Google OAuth + forgot password
 
 **Files:**
+
 - Create: `src/app/(auth)/login/login-form.tsx`
 - Modify: `src/app/(auth)/login/page.tsx`
 - Create: `src/app/(auth)/login/login-form.dom.test.tsx`
 
 **Interfaces:**
+
 - Produces: `LoginForm()` (exported, moved out of `page.tsx` so it's directly testable).
 - Consumes: `ElevatedCard` (Task 5), `PAGE_ROUTES.RESET_PASSWORD` (Task 5), `FORM_LABEL_CLASS`/`FORM_ERROR_CLASS` (Task 3), `completeSignup` (existing `./actions`), `loginSchema`/`vendorSchema` (existing `@/lib/schemas`).
 
@@ -818,18 +836,20 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { routerPush, routerRefresh, searchParamsValue, completeSignupMock, authMock } = vi.hoisted(() => ({
-  routerPush: vi.fn(),
-  routerRefresh: vi.fn(),
-  searchParamsValue: { current: '' },
-  completeSignupMock: vi.fn(),
-  authMock: {
-    signInWithOAuth: vi.fn(),
-    signUp: vi.fn(),
-    signInWithPassword: vi.fn(),
-    resetPasswordForEmail: vi.fn(),
-  },
-}));
+const { routerPush, routerRefresh, searchParamsValue, completeSignupMock, authMock } = vi.hoisted(
+  () => ({
+    routerPush: vi.fn(),
+    routerRefresh: vi.fn(),
+    searchParamsValue: { current: '' },
+    completeSignupMock: vi.fn(),
+    authMock: {
+      signInWithOAuth: vi.fn(),
+      signUp: vi.fn(),
+      signInWithPassword: vi.fn(),
+      resetPasswordForEmail: vi.fn(),
+    },
+  })
+);
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: routerPush, refresh: routerRefresh }),
@@ -1059,7 +1079,9 @@ export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
-  const [mode, setMode] = useState<Mode>(searchParams.get('mode') === 'signup' ? 'signup' : 'signin');
+  const [mode, setMode] = useState<Mode>(
+    searchParams.get('mode') === 'signup' ? 'signup' : 'signin'
+  );
   const [stallName, setStallName] = useState('');
   const [stallNameError, setStallNameError] = useState<string | null>(null);
   const { pending: loading, run } = useAsyncAction();
@@ -1158,19 +1180,19 @@ export function LoginForm() {
             <Link href={PAGE_ROUTES.HOME} className="text-2xl font-bold tracking-tight">
               <BrandText />
             </Link>
-            <h1 className="mt-6 text-3xl font-semibold leading-tight">Check your email</h1>
+            <h1 className="mt-6 text-3xl leading-tight font-semibold">Check your email</h1>
             <p className="text-muted-foreground mt-3 text-sm">
               {isReset ? (
                 <>
                   We sent a password reset link to{' '}
-                  <span className="text-foreground font-medium">{sent.email}</span>. Open it to choose a
-                  new password.
+                  <span className="text-foreground font-medium">{sent.email}</span>. Open it to
+                  choose a new password.
                 </>
               ) : (
                 <>
                   We sent a confirmation link to{' '}
-                  <span className="text-foreground font-medium">{sent.email}</span>. Click it to activate
-                  your account, then sign in.
+                  <span className="text-foreground font-medium">{sent.email}</span>. Click it to
+                  activate your account, then sign in.
                 </>
               )}
             </p>
@@ -1205,11 +1227,13 @@ export function LoginForm() {
 
         <ElevatedCard>
           <div className="px-7 pt-9 pb-8">
-            <h1 className="text-3xl font-semibold leading-tight">
+            <h1 className="text-3xl leading-tight font-semibold">
               {isSignin ? 'Welcome back' : 'Create your account'}
             </h1>
             <p className="text-muted-foreground mt-1.5 text-sm">
-              {isSignin ? 'Sign in to your vendor dashboard.' : 'Set up a vendor account in seconds.'}
+              {isSignin
+                ? 'Sign in to your vendor dashboard.'
+                : 'Set up a vendor account in seconds.'}
             </p>
 
             <Button
@@ -1225,7 +1249,7 @@ export function LoginForm() {
 
             <div className="my-6 flex items-center gap-3">
               <span className="bg-border h-px flex-1" />
-              <span className="text-muted-foreground text-[0.7rem] font-semibold uppercase tracking-[0.18em]">
+              <span className="text-muted-foreground text-[0.7rem] font-semibold tracking-[0.18em] uppercase">
                 or with email
               </span>
               <span className="bg-border h-px flex-1" />
@@ -1383,10 +1407,12 @@ EOF
 ## Task 7: Landing — `Hero` component (authed-aware)
 
 **Files:**
+
 - Create: `src/components/landing/hero.tsx`
 - Create: `src/components/landing/hero.dom.test.tsx`
 
 **Interfaces:**
+
 - Produces: `Hero({ authed?: boolean })`.
 
 - [ ] **Step 1: Write the failing test**
@@ -1478,10 +1504,12 @@ git commit -m "feat: extract landing Hero into its own authed-aware component"
 ## Task 8: Landing — `HowItWorks` component
 
 **Files:**
+
 - Create: `src/components/landing/how-it-works.tsx`
 - Create: `src/components/landing/how-it-works.dom.test.tsx`
 
 **Interfaces:**
+
 - Produces: `HowItWorks()`.
 
 - [ ] **Step 1: Write the failing test**
@@ -1570,10 +1598,12 @@ git commit -m "feat: extract landing HowItWorks into its own component"
 ## Task 9: Landing — `Benefits` component (new content)
 
 **Files:**
+
 - Create: `src/components/landing/benefits.tsx`
 - Create: `src/components/landing/benefits.dom.test.tsx`
 
 **Interfaces:**
+
 - Produces: `Benefits()`.
 
 - [ ] **Step 1: Write the failing test**
@@ -1661,10 +1691,12 @@ git commit -m "feat: add landing Benefits section (stockkit had none)"
 ## Task 10: Landing — `Faq` component
 
 **Files:**
+
 - Create: `src/components/landing/faq.tsx`
 - Create: `src/components/landing/faq.dom.test.tsx`
 
 **Interfaces:**
+
 - Produces: `Faq()`.
 
 - [ ] **Step 1: Write the failing test**
@@ -1760,10 +1792,12 @@ git commit -m "feat: extract landing Faq into its own component"
 ## Task 11: Landing — `Cta` component (authed-aware)
 
 **Files:**
+
 - Create: `src/components/landing/cta.tsx`
 - Create: `src/components/landing/cta.dom.test.tsx`
 
 **Interfaces:**
+
 - Produces: `Cta({ authed?: boolean })`.
 
 - [ ] **Step 1: Write the failing test**
@@ -1849,9 +1883,11 @@ git commit -m "feat: add landing closing Cta section"
 ## Task 12: Rewire `(public)/page.tsx` composition
 
 **Files:**
+
 - Modify: `src/app/(public)/page.tsx`
 
 **Interfaces:**
+
 - Consumes: `Hero`, `HowItWorks`, `Benefits`, `Faq`, `Cta` (Tasks 7–11), `createServerClient` (existing `@/lib/supabase/server`).
 
 - [ ] **Step 1: Replace the page**
