@@ -20,7 +20,7 @@ its three sibling kits (qkit, loopkit, paykit):
   but its chroma is markedly lower than the siblings' (0.12–0.18), so it reads
   flat/washed-out next to them. There is also a dead gradient utility
   (`.text-brand-gradient` / `.bg-brand-gradient` = `from-primary via-primary
-  to-primary`, i.e. one solid color, not a gradient).
+to-primary`, i.e. one solid color, not a gradient).
 
 There is also an in-flight, uncommitted refactor already sitting in the repo
 (`(public)/layout.tsx`, `navbar.tsx`, `site-footer.tsx`) that moves `Navbar`/
@@ -67,10 +67,10 @@ computation (OKLCH → linear sRGB → WCAG relative-luminance ratio, standard
 Björn Ottosson OKLab conversion formulas) plus hue-distance constraint
 checking against the three sibling palettes:
 
-| token | value | hex (approx) | contrast vs near-white text | contrast vs page bg |
-|---|---|---|---|---|
-| `--primary` (light) | `oklch(0.46 0.16 255)` | `#0055ae` | 6.81 | 6.61 |
-| `--primary` (dark) | `oklch(0.68 0.13 252)` | `#589ce6` | 6.84 (vs near-black) | 6.29 |
+| token               | value                  | hex (approx) | contrast vs near-white text | contrast vs page bg |
+| ------------------- | ---------------------- | ------------ | --------------------------- | ------------------- |
+| `--primary` (light) | `oklch(0.46 0.16 255)` | `#0055ae`    | 6.81                        | 6.61                |
+| `--primary` (dark)  | `oklch(0.68 0.13 252)` | `#589ce6`    | 6.84 (vs near-black)        | 6.29                |
 
 Both clear WCAG AAA (7:1) territory with margin. Hue 255 sits 35° from
 paykit's minor "flow" accent (220), 95° from loopkit's magenta primary (350),

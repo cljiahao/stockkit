@@ -5,6 +5,17 @@ export const loginSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
+export const passwordChangeSchema = z
+  .object({
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirm: z.string(),
+  })
+  .refine((d) => d.password === d.confirm, {
+    message: 'Passwords do not match',
+    path: ['confirm'],
+  });
+export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
+
 export const vendorSchema = z.object({
   name: z.string().min(1, 'Stall name is required').max(100),
 });

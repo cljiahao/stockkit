@@ -3,6 +3,7 @@ export const PAGE_ROUTES = {
   DASHBOARD: '/dashboard',
   PRODUCTS: '/dashboard/products',
   LOGIN: '/login',
+  RESET_PASSWORD: '/reset-password',
 } as const;
 
 export const API_ROUTES = {
