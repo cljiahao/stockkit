@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Pinned `postcss` to `>=8.5.12` via a `pnpm-workspace.yaml` override,
+  patching a high-severity arbitrary-file-read advisory
+  (GHSA-6g55-p6wh-862q) in the version pulled in transitively by `next`.
 - `DashboardNav`'s account-menu avatar now renders the vendor's uploaded
   profile icon (`AvatarImage`, sourced from `dashboard/layout.tsx` reading
   `user.user_metadata.avatar_url`) instead of always showing initials —
