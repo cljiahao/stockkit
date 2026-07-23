@@ -4,7 +4,10 @@ Shared utilities and business logic. `schemas.ts` — Zod schemas for forms
 and server actions; `types.ts` — hand-maintained DB types mirroring
 `supabase/migrations/`; `stock.ts` — stock-status (ok/low/out)
 classification; `action-result.ts` — `ActionResult<T>` server-action
-return type; `supabase/` — browser/server/service clients.
+return type; `merqo-vendor-feedback.ts` — `submitVendorFeedback`:
+hand-written mirror of merqo's cross-schema `submit_vendor_feedback` RPC
+contract, generic over the caller's own `Database`/schema; `supabase/` —
+browser/server/service clients.
 
 `brand-icon.tsx` — the `brandIcon(size)` generator consumed by
 `src/app/icon.tsx`/`apple-icon.tsx`, per
