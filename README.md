@@ -101,6 +101,7 @@ conventions.
 - `src/hooks/use-async-action.ts` — the `pending`-flag-that-always-resets hook shared by every form/action in the app.
 - `src/lib/supabase/` — the three Supabase client factories (`client.ts` browser, `server.ts` server + service-role, `middleware.ts` session refresh) plus `env.ts` (fail-fast public env validation).
 - `src/lib/{types,schemas,action-result,stock}.ts` — the `Database` type mirror of the SQL schema, Zod validation schemas + money-cents helpers, the `ActionResult<T>` server-action return type, and the shared stock-status (`ok`/`low`/`out`) classification used by both the overview stats and the products workspace.
+- `src/lib/brand-icon.tsx` + `src/app/icon.tsx` + `src/app/apple-icon.tsx` — the generated favicon/Apple-touch-icon (a `next/og` `ImageResponse`, no image assets), per `docs/business/2026-07-21-brand-icon-family-standard.md`'s shared cross-kit formula.
 - `src/proxy.ts` — Next 16's middleware entrypoint; guards `/dashboard` behind a session check.
 - `supabase/migrations/` — the ordered SQL schema history (own README).
 

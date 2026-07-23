@@ -1,5 +1,6 @@
 # src/app/(public)
 
 The marketing landing page. `page.tsx` composes the section components in
-`src/components/landing/`; `layout.tsx` wraps it with the shared `Navbar`/
-`SiteFooter` and fetches the session so both can render auth-aware.
+`src/components/landing/` inside a `<div id="top">` (the anchor target for
+the navbar wordmark's `/#top` link); `layout.tsx` wraps it with the shared
+`Navbar`/`SiteFooter` and fetches the session so both can render auth-aware.
