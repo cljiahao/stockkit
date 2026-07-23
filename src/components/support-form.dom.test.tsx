@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import { render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SupportForm } from './support-form';
 
 const { submitSupportMessageActionMock } = vi.hoisted(() => ({
@@ -11,6 +11,8 @@ const { submitSupportMessageActionMock } = vi.hoisted(() => ({
 vi.mock('@/app/actions/support', () => ({
   submitSupportMessageAction: submitSupportMessageActionMock,
 }));
+
+afterEach(() => cleanup());
 
 beforeEach(() => {
   submitSupportMessageActionMock.mockReset();
@@ -29,10 +31,10 @@ describe('SupportForm', () => {
     const user = userEvent.setup();
     render(<SupportForm />);
 
-    const form = screen.getAllByTestId('support-form')[0];
-    await user.click(screen.getAllByRole('radio', { name: /account/i })[0]);
+    const form = screen.getByTestId('support-form');
+    await user.click(screen.getByRole('radio', { name: /account/i }));
     await user.type(form.querySelector('textarea') as HTMLTextAreaElement, "Can't sign in.");
-    await user.click(screen.getAllByRole('button', { name: /send message/i })[0]);
+    await user.click(screen.getByRole('button', { name: /send message/i }));
 
     await waitFor(() => {
       expect(submitSupportMessageActionMock).toHaveBeenCalledWith({
