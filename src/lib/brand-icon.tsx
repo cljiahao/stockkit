@@ -1,8 +1,10 @@
 import type { ReactElement } from 'react';
 
 // Steel/cobalt marks, approximated from the OKLCH theme tokens as concrete
-// hex — ImageResponse needs literal CSS colors.
-export const BRAND_STEEL = '#3f5a8a';
+// hex — ImageResponse needs literal CSS colors. BRAND_STEEL tracks
+// --primary: oklch(0.46 0.16 255) (the richer-cobalt refresh); update this
+// if --primary ever changes again.
+export const BRAND_STEEL = '#0055ae';
 export const BRAND_PALE = '#f4f7fb';
 
 export function brandIcon(size: number): ReactElement {

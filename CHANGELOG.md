@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Logo mark (`BrandText`, public `Navbar`, `DashboardNav`) now renders
+  "StockKit" (PascalCase) instead of "stockkit" (fully lowercase), matching
+  the locked cross-kit brand-naming convention. Public `Navbar` gained the
+  required `#faq` link and its wordmark now uses a plain `<a href="/#top">`
+  instead of `next/link`'s `Link`, matching the locked landing-page
+  standard. Favicon's brand color updated to match the current (richer)
+  primary — it was still the pre-refresh washed-out hex.
 - Landing page visual refresh: a new `Space Grotesk` display typeface on
   every section heading, an ambient cobalt-tinted background, a `LedgerCardPreview`
   hero illustration (mock product card — on-hand count, unit cost, a recent
