@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `/dashboard/profile` now covers the full profile-settings standard
+  (`docs/business/2026-07-21-profile-settings-page-standard.md`): display
+  name, profile icon (upload to a new `vendor-avatars` Storage bucket), and
+  change-password sections, alongside the existing stall name/social links.
+  Previously only stall name and social links existed on this page.
 - Bumped `next` from `^16.2.9` to `^16.2.11`, patching four high-severity
   advisories (SSRF in Server Actions on custom servers, SSRF via
   attacker-controlled rewrite destination hostname) flagged by the CI

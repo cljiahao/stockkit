@@ -2,7 +2,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ProfileForm } from './profile-form';
 
 const updateStallName = vi.fn(async (_input: unknown) => ({ success: true }));
 const updateSocialLinks = vi.fn(async (_input: unknown) => ({ success: true }));
@@ -11,43 +10,120 @@ vi.mock('./actions', () => ({
   updateSocialLinks: (input: unknown) => updateSocialLinks(input),
 }));
 
+const { updateUserMock, uploadMock, getPublicUrlMock } = vi.hoisted(() => ({
+  updateUserMock: vi.fn(async (_input: unknown) => ({ error: null })),
+  uploadMock: vi.fn(async (_path: string, _blob: unknown, _opts: unknown) => ({ error: null })),
+  getPublicUrlMock: vi.fn((path: string) => ({
+    data: { publicUrl: `https://x.supabase.co/${path}` },
+  })),
+}));
+vi.mock('@/lib/supabase/client', () => ({
+  createClient: () => ({
+    auth: { updateUser: updateUserMock },
+    storage: { from: () => ({ upload: uploadMock, getPublicUrl: getPublicUrlMock }) },
+  }),
+}));
+
 vi.mock('sonner', () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }));
+
+import { ProfileForm } from './profile-form';
+
+const defaultProps = {
+  vendorId: 'v1',
+  stallName: 'My Stall',
+  socialLinks: {},
+  displayName: '',
+  email: 'vendor@example.com',
+  avatarUrl: null,
+};
 
 afterEach(() => cleanup());
 
 describe('ProfileForm', () => {
   beforeEach(() => {
-    updateStallName.mockClear();
-    updateSocialLinks.mockClear();
+    vi.clearAllMocks();
+    updateUserMock.mockResolvedValue({ error: null });
+    uploadMock.mockResolvedValue({ error: null });
   });
 
   it('saves the stall name independently of other sections', async () => {
     const user = userEvent.setup();
-    render(<ProfileForm vendorId="v1" stallName="My Stall" socialLinks={{}} />);
+    render(<ProfileForm {...defaultProps} />);
     const input = screen.getByLabelText(/stall\/shop name/i);
     await user.clear(input);
     await user.type(input, 'New Name');
-    await user.click(screen.getAllByRole('button', { name: /save/i })[0]);
+    await user.click(screen.getByRole('button', { name: /^save$/i }));
     expect(updateStallName).toHaveBeenCalledWith({ name: 'New Name' });
   });
 
   it('rejects an empty stall name client-side without calling the server action', async () => {
     const user = userEvent.setup();
-    render(<ProfileForm vendorId="v1" stallName="My Stall" socialLinks={{}} />);
+    render(<ProfileForm {...defaultProps} />);
     const input = screen.getByLabelText(/stall\/shop name/i);
     await user.clear(input);
-    await user.click(screen.getAllByRole('button', { name: /save/i })[0]);
+    await user.click(screen.getByRole('button', { name: /^save$/i }));
     expect(updateStallName).not.toHaveBeenCalled();
   });
 
   it('rejects an invalid social link URL client-side without calling the server action', async () => {
     const user = userEvent.setup();
-    render(<ProfileForm vendorId="v1" stallName="My Stall" socialLinks={{}} />);
+    render(<ProfileForm {...defaultProps} />);
     const input = screen.getByPlaceholderText('website');
     await user.type(input, 'not-a-url');
-    await user.click(screen.getAllByRole('button', { name: /save/i })[1]);
+    await user.click(screen.getByRole('button', { name: /save links/i }));
     expect(updateSocialLinks).not.toHaveBeenCalled();
+  });
+
+  it('saves the display name via supabase.auth.updateUser, independently of other sections', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    const input = screen.getByLabelText(/^display name$/i);
+    await user.type(input, 'Aisha');
+    await user.click(screen.getByRole('button', { name: /save display name/i }));
+    expect(updateUserMock).toHaveBeenCalledWith({ data: { display_name: 'Aisha' } });
+    expect(updateStallName).not.toHaveBeenCalled();
+  });
+
+  it('rejects a display name over 60 characters client-side', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    const input = screen.getByLabelText(/^display name$/i);
+    await user.type(input, 'a'.repeat(61));
+    await user.click(screen.getByRole('button', { name: /save display name/i }));
+    expect(updateUserMock).not.toHaveBeenCalled();
+  });
+
+  it('saves a new password and clears the fields on success', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    await user.type(screen.getByLabelText(/^new password$/i), 'hunter22');
+    await user.type(screen.getByLabelText(/confirm new password/i), 'hunter22');
+    await user.click(screen.getByRole('button', { name: /update password/i }));
+    expect(updateUserMock).toHaveBeenCalledWith({ password: 'hunter22' });
+    expect((screen.getByLabelText(/^new password$/i) as HTMLInputElement).value).toBe('');
+  });
+
+  it('rejects mismatched passwords client-side without calling updateUser', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    await user.type(screen.getByLabelText(/^new password$/i), 'hunter22');
+    await user.type(screen.getByLabelText(/confirm new password/i), 'different');
+    await user.click(screen.getByRole('button', { name: /update password/i }));
+    expect(updateUserMock).not.toHaveBeenCalled();
+    expect(screen.getByText('Passwords do not match')).toBeTruthy();
+  });
+
+  it('uploads and saves a new avatar via the profile icon uploader', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    const file = new File(['x'], 'photo.png', { type: 'image/png' });
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    await user.upload(fileInput, file);
+    expect(uploadMock).toHaveBeenCalled();
+    expect(updateUserMock).toHaveBeenCalledWith({
+      data: { avatar_url: expect.stringContaining('https://x.supabase.co/v1/') },
+    });
   });
 });
