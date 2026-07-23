@@ -6,8 +6,10 @@ and server actions; `types.ts` — hand-maintained DB types mirroring
 classification; `action-result.ts` — `ActionResult<T>` server-action
 return type; `merqo-vendor-feedback.ts` — `submitVendorFeedback`:
 hand-written mirror of merqo's cross-schema `submit_vendor_feedback` RPC
-contract, generic over the caller's own `Database`/schema; `supabase/` —
-browser/server/service clients.
+contract, generic over the caller's own `Database`/schema; `merqo-support.ts`
+— `submitSupportMessage`: hand-written mirror of merqo's cross-schema
+`submit_support_message` RPC contract; `supabase/` — browser/server/service
+clients.
 
 `brand-icon.tsx` — the `brandIcon(size)` generator consumed by
 `src/app/icon.tsx`/`apple-icon.tsx`, per
