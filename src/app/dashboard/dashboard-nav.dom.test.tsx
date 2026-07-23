@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DashboardNav } from './dashboard-nav';
 
 // No live Supabase project is configured in this environment (see AGENTS.md);
@@ -17,11 +17,31 @@ vi.mock('@/app/actions/feedback', () => ({
   submitFeedbackAction: vi.fn(async () => ({ success: true })),
 }));
 
+vi.mock('@/components/support-form', () => ({
+  SupportForm: () => <div data-testid="support-form">Support Form</div>,
+}));
+
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
+afterEach(() => {
+  cleanup();
+});
+
 describe('DashboardNav', () => {
+  it('Get help opens a Sheet with the support form, not a mailto link', async () => {
+    const user = userEvent.setup();
+    render(<DashboardNav vendorName="My Stall" />);
+    await user.click(screen.getByRole('button', { name: /account menu/i }));
+
+    const getHelp = screen.getByRole('menuitem', { name: /get help/i });
+    expect(getHelp.querySelector('a')).toBeNull();
+
+    await user.click(getHelp);
+    expect(screen.getByTestId('support-form')).toBeTruthy();
+  });
+
   it('account menu has Profile, Get help, Feedback, then Sign out, with no Plan item', async () => {
     const user = userEvent.setup();
     render(<DashboardNav vendorName="My Stall" />);
