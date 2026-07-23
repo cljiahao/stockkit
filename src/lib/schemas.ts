@@ -16,6 +16,11 @@ export const passwordChangeSchema = z
   });
 export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
 
+export const displayNameSchema = z.object({
+  displayName: z.string().trim().max(60, 'Display name is too long'),
+});
+export type DisplayNameInput = z.infer<typeof displayNameSchema>;
+
 export const vendorSchema = z.object({
   name: z.string().min(1, 'Stall name is required').max(100),
 });

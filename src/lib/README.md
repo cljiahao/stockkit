@@ -16,3 +16,9 @@ clients.
 `docs/business/2026-07-21-brand-icon-family-standard.md`'s shared
 formula. `BRAND_STEEL`/`BRAND_PALE` are concrete-hex approximations of
 `--primary`/`--primary-foreground` — keep in sync if those tokens change.
+
+`image-resize.ts` — `resizeToWebp(file, maxDim, quality?)`, browser-only
+(Canvas + `createImageBitmap`): resizes an uploaded image so its longest
+side is `<= maxDim` and re-encodes it as WebP, falling back to the original
+file untouched if the browser can't decode/encode it. Used by
+`src/components/image-uploader.tsx` before every avatar upload.
