@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `FeedbackForm`'s NPS/category pickers and `SupportForm`'s category picker
+  now use shadcn `ToggleGroup`/`Textarea` instead of hand-rolled radio
+  markup and a plain `<textarea>`, matching qkit's equivalent components.
+  No behavior, copy, or schema change.
 - `/dashboard/profile` now covers the full profile-settings standard
   (`docs/business/2026-07-21-profile-settings-page-standard.md`): display
   name, profile icon (upload to a new `vendor-avatars` Storage bucket), and
