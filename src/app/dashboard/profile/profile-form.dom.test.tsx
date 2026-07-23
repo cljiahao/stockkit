@@ -11,7 +11,9 @@ vi.mock('./actions', () => ({
 }));
 
 const { updateUserMock, uploadMock, getPublicUrlMock } = vi.hoisted(() => ({
-  updateUserMock: vi.fn(async (_input: unknown) => ({ error: null })),
+  updateUserMock: vi.fn(
+    async (_input: unknown): Promise<{ error: null | { message: string } }> => ({ error: null })
+  ),
   uploadMock: vi.fn(async (_path: string, _blob: unknown, _opts: unknown) => ({ error: null })),
   getPublicUrlMock: vi.fn((path: string) => ({
     data: { publicUrl: `https://x.supabase.co/${path}` },
@@ -125,5 +127,34 @@ describe('ProfileForm', () => {
     expect(updateUserMock).toHaveBeenCalledWith({
       data: { avatar_url: expect.stringContaining('https://x.supabase.co/v1/') },
     });
+  });
+
+  it('rolls back avatar state on save failure and shows error toast', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+
+    // Initially, should show "Add photo" button (no avatar)
+    expect(screen.getByText(/add photo/i)).toBeTruthy();
+
+    // Mock updateUser to return an error
+    updateUserMock.mockResolvedValueOnce({
+      error: { message: 'Network error' },
+    });
+
+    // Upload an avatar file
+    const file = new File(['x'], 'photo.png', { type: 'image/png' });
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    await user.upload(fileInput, file);
+
+    // Wait for the async operation to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // After the save failure, the "Add photo" button should still be visible
+    // (avatar state should have been rolled back to null)
+    expect(screen.getByText(/add photo/i)).toBeTruthy();
+
+    // Error toast should have been shown
+    const { toast } = await import('sonner');
+    expect(toast.error).toHaveBeenCalledWith('Network error');
   });
 });

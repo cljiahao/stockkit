@@ -94,10 +94,12 @@ export function ProfileForm({
   }
 
   function saveAvatar(url: string | null) {
+    const previousAvatar = avatar;
     setAvatar(url);
     return runAvatar(async () => {
       const { error } = await supabase.auth.updateUser({ data: { avatar_url: url } });
       if (error) {
+        setAvatar(previousAvatar);
         toast.error(error.message);
         return;
       }
