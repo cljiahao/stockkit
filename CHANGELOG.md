@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Bumped `next` from `^16.2.9` to `^16.2.11`, patching four high-severity
+  advisories (SSRF in Server Actions on custom servers, SSRF via
+  attacker-controlled rewrite destination hostname) flagged by the CI
+  dependency-audit gate.
+- `SiteFooter` now renders the full mandatory footer per
+  `docs/business/2026-07-21-landing-page-standard.md` §1.5: a `StockKit`
+  wordmark (linking `/#top`) and a one-line tagline, alongside the existing
+  `© <year> stockkit · a Merqo kit` credit line — it previously carried only
+  the credit line, matching qkit's and loopkit's footer structure.
 - Logo mark (`BrandText`, public `Navbar`, `DashboardNav`) now renders
   "StockKit" (PascalCase) instead of "stockkit" (fully lowercase), matching
   the locked cross-kit brand-naming convention. Public `Navbar` gained the

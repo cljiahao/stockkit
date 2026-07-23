@@ -10,3 +10,10 @@ cleanly on top of the landing page's ambient gradient background. Per
 `docs/business/2026-07-21-landing-page-standard.md`: wordmark links via a
 plain `<a href="/#top">` (not `next/link`'s `Link`, for reliable same-page
 hash navigation) and there's a `#faq` link next to the login/dashboard CTA.
+
+`SiteFooter` is an inverted panel (`bg-foreground`/`text-background`, so it
+stays high-contrast against the page in both themes) carrying the three
+things §1.5 of the same standard requires: a `StockKit` wordmark (also
+`/#top`), a one-line tagline, and the mandatory `© <year> stockkit · a Merqo
+kit` credit line. It's shared by the public layout and the dashboard
+layout.
