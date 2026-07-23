@@ -14,3 +14,7 @@ type/size client-side, resizes via `@/lib/image-resize`'s `resizeToWebp`,
 uploads to the `vendor-avatars` Storage bucket under the vendor's own
 `{vendorId}/...` path, and reports the resulting public URL back to the
 caller.
+`feedback-form.tsx`/`support-form.tsx` — vendor NPS and categorized
+Get-help widgets, Sheet-mounted off the account menu; both use shadcn
+`ToggleGroup`/`Textarea` for their score/category pickers and message
+body, matching qkit's equivalent components.
