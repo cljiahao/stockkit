@@ -67,12 +67,16 @@ export function ProfileForm({
     }
     setNameError(null);
     return runName(async () => {
-      const res = await updateStallName(parsed.data);
-      if (!res.success) {
-        toast.error(res.error);
-        return;
+      try {
+        const res = await updateStallName(parsed.data);
+        if (!res.success) {
+          toast.error(res.error);
+          return;
+        }
+        toast.success('Stall name saved');
+      } catch {
+        toast.error('Something went wrong. Please try again.');
       }
-      toast.success('Stall name saved');
     });
   }
 
@@ -84,12 +88,16 @@ export function ProfileForm({
     }
     setLinksError(null);
     return runLinks(async () => {
-      const res = await updateSocialLinks(parsed.data);
-      if (!res.success) {
-        toast.error(res.error);
-        return;
+      try {
+        const res = await updateSocialLinks(parsed.data);
+        if (!res.success) {
+          toast.error(res.error);
+          return;
+        }
+        toast.success('Links saved');
+      } catch {
+        toast.error('Something went wrong. Please try again.');
       }
-      toast.success('Links saved');
     });
   }
 
@@ -97,13 +105,18 @@ export function ProfileForm({
     const previousAvatar = avatar;
     setAvatar(url);
     return runAvatar(async () => {
-      const { error } = await supabase.auth.updateUser({ data: { avatar_url: url } });
-      if (error) {
+      try {
+        const { error } = await supabase.auth.updateUser({ data: { avatar_url: url } });
+        if (error) {
+          setAvatar(previousAvatar);
+          toast.error(error.message);
+          return;
+        }
+        toast.success(url ? 'Profile icon saved' : 'Profile icon removed');
+      } catch {
         setAvatar(previousAvatar);
-        toast.error(error.message);
-        return;
+        toast.error('Something went wrong. Please try again.');
       }
-      toast.success(url ? 'Profile icon saved' : 'Profile icon removed');
     });
   }
 
@@ -115,14 +128,18 @@ export function ProfileForm({
     }
     setDisplayError(null);
     return runDisplay(async () => {
-      const { error } = await supabase.auth.updateUser({
-        data: { display_name: parsed.data.displayName },
-      });
-      if (error) {
-        toast.error(error.message);
-        return;
+      try {
+        const { error } = await supabase.auth.updateUser({
+          data: { display_name: parsed.data.displayName },
+        });
+        if (error) {
+          toast.error(error.message);
+          return;
+        }
+        toast.success('Display name saved');
+      } catch {
+        toast.error('Something went wrong. Please try again.');
       }
-      toast.success('Display name saved');
     });
   }
 
@@ -134,14 +151,18 @@ export function ProfileForm({
     }
     setPwError(null);
     return runPw(async () => {
-      const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
-      if (error) {
-        toast.error(error.message);
-        return;
+      try {
+        const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+        if (error) {
+          toast.error(error.message);
+          return;
+        }
+        toast.success('Password updated');
+        setPassword('');
+        setConfirm('');
+      } catch {
+        toast.error('Something went wrong. Please try again.');
       }
-      toast.success('Password updated');
-      setPassword('');
-      setConfirm('');
     });
   }
 

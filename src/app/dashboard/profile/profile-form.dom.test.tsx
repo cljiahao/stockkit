@@ -3,8 +3,14 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const updateStallName = vi.fn(async (_input: unknown) => ({ success: true }));
-const updateSocialLinks = vi.fn(async (_input: unknown) => ({ success: true }));
+import type { ActionResult } from '@/lib/action-result';
+
+const updateStallName = vi.fn(async (_input: unknown): Promise<ActionResult> => ({
+  success: true,
+}));
+const updateSocialLinks = vi.fn(async (_input: unknown): Promise<ActionResult> => ({
+  success: true,
+}));
 vi.mock('./actions', () => ({
   updateStallName: (input: unknown) => updateStallName(input),
   updateSocialLinks: (input: unknown) => updateSocialLinks(input),
@@ -76,6 +82,64 @@ describe('ProfileForm', () => {
     await user.type(input, 'not-a-url');
     await user.click(screen.getByRole('button', { name: /save links/i }));
     expect(updateSocialLinks).not.toHaveBeenCalled();
+  });
+
+  it('saves valid social links via the server action', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    const input = screen.getByPlaceholderText('website');
+    await user.type(input, 'https://instagram.com/mystall');
+    await user.click(screen.getByRole('button', { name: /save links/i }));
+    expect(updateSocialLinks).toHaveBeenCalledWith(
+      expect.objectContaining({ website: 'https://instagram.com/mystall' })
+    );
+    const { toast } = await import('sonner');
+    expect(toast.success).toHaveBeenCalledWith('Links saved');
+  });
+
+  it('shows an error toast when saving the stall name returns a failure', async () => {
+    updateStallName.mockResolvedValueOnce({ success: false, error: 'Server error' });
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    const input = screen.getByLabelText(/stall\/shop name/i);
+    await user.clear(input);
+    await user.type(input, 'New Name');
+    await user.click(screen.getByRole('button', { name: /^save$/i }));
+    const { toast } = await import('sonner');
+    expect(toast.error).toHaveBeenCalledWith('Server error');
+  });
+
+  it('shows an error toast when saving social links returns a failure', async () => {
+    updateSocialLinks.mockResolvedValueOnce({ success: false, error: 'Links server error' });
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    const input = screen.getByPlaceholderText('website');
+    await user.type(input, 'https://instagram.com/mystall');
+    await user.click(screen.getByRole('button', { name: /save links/i }));
+    const { toast } = await import('sonner');
+    expect(toast.error).toHaveBeenCalledWith('Links server error');
+  });
+
+  it('shows an error toast when saving the display name returns a failure', async () => {
+    updateUserMock.mockResolvedValueOnce({ error: { message: 'Display name server error' } });
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    const input = screen.getByLabelText(/^display name$/i);
+    await user.type(input, 'Aisha');
+    await user.click(screen.getByRole('button', { name: /save display name/i }));
+    const { toast } = await import('sonner');
+    expect(toast.error).toHaveBeenCalledWith('Display name server error');
+  });
+
+  it('shows an error toast when updating the password returns a failure', async () => {
+    updateUserMock.mockResolvedValueOnce({ error: { message: 'Password server error' } });
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    await user.type(screen.getByLabelText(/^new password$/i), 'hunter22');
+    await user.type(screen.getByLabelText(/confirm new password/i), 'hunter22');
+    await user.click(screen.getByRole('button', { name: /update password/i }));
+    const { toast } = await import('sonner');
+    expect(toast.error).toHaveBeenCalledWith('Password server error');
   });
 
   it('saves the display name via supabase.auth.updateUser, independently of other sections', async () => {
@@ -156,5 +220,37 @@ describe('ProfileForm', () => {
     // Error toast should have been shown
     const { toast } = await import('sonner');
     expect(toast.error).toHaveBeenCalledWith('Network error');
+  });
+
+  it('shows an error toast when saving the stall name throws instead of returning an error', async () => {
+    updateStallName.mockRejectedValueOnce(new Error('network down'));
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+    const input = screen.getByLabelText(/stall\/shop name/i);
+    await user.clear(input);
+    await user.type(input, 'New Name');
+    await user.click(screen.getByRole('button', { name: /^save$/i }));
+    const { toast } = await import('sonner');
+    expect(toast.error).toHaveBeenCalledWith('Something went wrong. Please try again.');
+  });
+
+  it('rolls back avatar state when the avatar save throws instead of returning an error', async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm {...defaultProps} />);
+
+    expect(screen.getByText(/add photo/i)).toBeTruthy();
+
+    updateUserMock.mockRejectedValueOnce(new Error('network down'));
+
+    const file = new File(['x'], 'photo.png', { type: 'image/png' });
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    await user.upload(fileInput, file);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(screen.getByText(/add photo/i)).toBeTruthy();
+
+    const { toast } = await import('sonner');
+    expect(toast.error).toHaveBeenCalledWith('Something went wrong. Please try again.');
   });
 });
