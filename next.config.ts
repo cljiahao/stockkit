@@ -5,10 +5,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
 
-  // Uncomment and add domains when using next/image with external URLs:
-  // images: {
-  //   remotePatterns: [{ protocol: 'https', hostname: 'example.com' }],
-  // },
+  images: {
+    remotePatterns: [{ protocol: 'https', hostname: '*.supabase.co' }],
+  },
 
   async headers() {
     return [
