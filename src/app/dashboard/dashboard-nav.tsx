@@ -2,7 +2,7 @@
 
 import { FeedbackForm } from '@/components/feedback-form';
 import { SupportForm } from '@/components/support-form';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +28,7 @@ import { useState } from 'react';
 
 interface Props {
   vendorName: string;
+  avatarUrl?: string | null;
 }
 
 function initials(label: string): string {
@@ -43,7 +44,7 @@ function initials(label: string): string {
  * stockkit has no vendor-tier concept (sanctioned skip, see this plan's
  * Global Constraints).
  */
-export function DashboardNav({ vendorName }: Props) {
+export function DashboardNav({ vendorName, avatarUrl = null }: Props) {
   const router = useRouter();
   const supabase = createClient();
   const { pending, run } = useAsyncAction();
@@ -88,6 +89,7 @@ export function DashboardNav({ vendorName }: Props) {
                 className="hover:bg-secondary focus-visible:ring-ring/50 flex items-center gap-2 rounded-lg py-1 pr-2 pl-1 text-left transition-colors outline-none focus-visible:ring-[3px]"
               >
                 <Avatar className="ring-primary/25 size-8 shrink-0 rounded-md ring-1 ring-inset">
+                  {avatarUrl && <AvatarImage src={avatarUrl} alt="" />}
                   <AvatarFallback className="bg-primary/12 text-primary rounded-md font-mono text-xs font-semibold tracking-tight">
                     {initials(vendorName)}
                   </AvatarFallback>
@@ -98,8 +100,9 @@ export function DashboardNav({ vendorName }: Props) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-xl">
-              <DropdownMenuLabel className="text-muted-foreground truncate px-2 py-2 text-xs font-normal">
-                {vendorName}
+              <DropdownMenuLabel className="px-2 py-2">
+                <p className="truncate text-sm font-semibold">{vendorName}</p>
+                <p className="text-muted-foreground text-xs font-normal">Vendor account</p>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>

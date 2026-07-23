@@ -2,6 +2,7 @@
 
 import { ImageUploader } from '@/components/image-uploader';
 import { Section } from '@/components/section';
+import { SocialLinksFields } from '@/components/social-links-fields';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -312,16 +313,7 @@ export function ProfileForm({
           title="Social links"
           description="Applies across every Merqo kit you use."
         >
-          <div className="space-y-2">
-            {(['website', 'instagram', 'facebook', 'tiktok'] as const).map((key) => (
-              <Input
-                key={key}
-                placeholder={key}
-                value={links[key] ?? ''}
-                onChange={(e) => setLinks({ ...links, [key]: e.target.value })}
-              />
-            ))}
-          </div>
+          <SocialLinksFields value={links} onChange={setLinks} idPrefix="profile" />
           {linksError && <p className={FORM_ERROR_CLASS}>{linksError}</p>}
           <div className="flex justify-end">
             <Button onClick={saveLinks} disabled={savingLinks} aria-label="Save links">

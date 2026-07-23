@@ -78,7 +78,7 @@ describe('ProfileForm', () => {
   it('rejects an invalid social link URL client-side without calling the server action', async () => {
     const user = userEvent.setup();
     render(<ProfileForm {...defaultProps} />);
-    const input = screen.getByPlaceholderText('website');
+    const input = screen.getByLabelText(/^website$/i);
     await user.type(input, 'not-a-url');
     await user.click(screen.getByRole('button', { name: /save links/i }));
     expect(updateSocialLinks).not.toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe('ProfileForm', () => {
   it('saves valid social links via the server action', async () => {
     const user = userEvent.setup();
     render(<ProfileForm {...defaultProps} />);
-    const input = screen.getByPlaceholderText('website');
+    const input = screen.getByLabelText(/^website$/i);
     await user.type(input, 'https://instagram.com/mystall');
     await user.click(screen.getByRole('button', { name: /save links/i }));
     expect(updateSocialLinks).toHaveBeenCalledWith(
@@ -113,7 +113,7 @@ describe('ProfileForm', () => {
     updateSocialLinks.mockResolvedValueOnce({ success: false, error: 'Links server error' });
     const user = userEvent.setup();
     render(<ProfileForm {...defaultProps} />);
-    const input = screen.getByPlaceholderText('website');
+    const input = screen.getByLabelText(/^website$/i);
     await user.type(input, 'https://instagram.com/mystall');
     await user.click(screen.getByRole('button', { name: /save links/i }));
     const { toast } = await import('sonner');
