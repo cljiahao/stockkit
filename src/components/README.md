@@ -18,3 +18,8 @@ caller.
 Get-help widgets, Sheet-mounted off the account menu; both use shadcn
 `ToggleGroup`/`Textarea` for their score/category pickers and message
 body, matching qkit's equivalent components.
+`social-icons.tsx` — `SOCIAL_LINK_FIELDS`, the shared website/Instagram/
+Facebook/TikTok field list (real brand marks via
+`@icons-pack/react-simple-icons`, a generic `Globe` for website).
+`social-links-fields.tsx` — the labeled-icon input group built from it,
+used by the profile page's social-links section.

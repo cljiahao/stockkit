@@ -60,4 +60,23 @@ describe('DashboardNav', () => {
     const burger = screen.getByRole('button', { name: /open menu/i });
     expect(burger.className).toMatch(/sm:hidden/);
   });
+
+  it("accepts an avatarUrl prop without crashing (jsdom cannot exercise Radix Avatar's image-load path)", () => {
+    render(<DashboardNav vendorName="My Stall" avatarUrl="https://x.supabase.co/avatar.png" />);
+    expect(screen.getByRole('button', { name: /account menu/i })).toBeTruthy();
+  });
+
+  it('falls back to initials when avatarUrl is not set', () => {
+    render(<DashboardNav vendorName="My Stall" />);
+    expect(document.querySelector('img')).toBeNull();
+    expect(screen.getByText('M')).toBeTruthy();
+  });
+
+  it('shows a bold vendor name and a muted "Vendor account" subtitle in the dropdown', async () => {
+    const user = userEvent.setup();
+    render(<DashboardNav vendorName="My Stall" />);
+    await user.click(screen.getByRole('button', { name: /account menu/i }));
+    expect(screen.getByText('Vendor account')).toBeTruthy();
+    expect(screen.getAllByText('My Stall').length).toBeGreaterThan(0);
+  });
 });

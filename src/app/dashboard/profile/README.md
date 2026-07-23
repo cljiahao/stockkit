@@ -24,8 +24,10 @@ name/password), per
 displayName, email, avatarUrl })`, client component, five independently
   saved `Section`s in two independent `flex flex-col` stacks (never a CSS
   grid — see the standard's §2.3). Column 1: stall name, profile icon
-  (`ImageUploader`), change password. Column 2: display name, social links.
-  Column order and layout mechanism match the standard exactly.
+  (`ImageUploader`), change password. Column 2: display name, social links
+  (`@/components/social-links-fields.tsx` — real brand icons per field,
+  not plain unlabeled inputs). Column order and layout mechanism match the
+  standard exactly.
 
 ## Connectivity
 

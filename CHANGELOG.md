@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- `DashboardNav`'s account-menu avatar now renders the vendor's uploaded
+  profile icon (`AvatarImage`, sourced from `dashboard/layout.tsx` reading
+  `user.user_metadata.avatar_url`) instead of always showing initials —
+  the upload flow shipped without ever wiring the result up anywhere.
+  Also fixed the dropdown's vendor-name label, which rendered as tiny
+  muted text instead of a bold name + "Vendor account" subtitle.
+- Profile page's social-links inputs now show real brand icons
+  (Instagram/Facebook/TikTok via `@icons-pack/react-simple-icons`, a
+  generic globe for website) with proper labels, via a new
+  `SocialLinksFields` component — previously plain unlabeled inputs with
+  the field key as a placeholder.
 - `FeedbackForm`'s NPS/category pickers and `SupportForm`'s category picker
   now use shadcn `ToggleGroup`/`Textarea` instead of hand-rolled radio
   markup and a plain `<textarea>`, matching qkit's equivalent components.
