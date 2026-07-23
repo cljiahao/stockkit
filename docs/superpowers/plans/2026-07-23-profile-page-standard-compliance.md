@@ -1264,8 +1264,8 @@ git commit -m "feat: add display name, avatar upload, and password change to pro
 - [ ] `pnpm test` clean, full suite.
 - [ ] `pnpm build` succeeds (use placeholder env vars locally per the
       project's documented workaround: `NEXT_PUBLIC_SUPABASE_URL=https://placeholder.supabase.co
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=placeholder-publishable-key
-  SUPABASE_SECRET_KEY=placeholder-secret-key pnpm build`).
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=placeholder-publishable-key
+SUPABASE_SECRET_KEY=placeholder-secret-key pnpm build`).
 - [ ] Confirm every folder touched across all 6 tasks has its `README.md`
       in the final diff: `supabase/migrations/`, `src/lib/` (twice — Task 2
       touches `schemas.ts`/`schemas.test.ts` only, no README needed there
