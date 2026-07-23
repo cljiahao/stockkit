@@ -10,9 +10,9 @@ import { createClient } from '@/lib/supabase/client';
 
 // SVG is intentionally excluded — an avatar is always a real photo/raster upload.
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp'];
-// Generous source cap — resized + re-encoded to WebP before upload, so this
-// only blocks absurd files, not ordinary phone photos.
-const MAX_BYTES = 15 * 1024 * 1024;
+// Server bucket limit is 5MB; resizeToWebp re-encodes to WebP to stay under
+// this, but the fallback path (decode/encode failure) uploads original.
+const MAX_BYTES = 5 * 1024 * 1024;
 const MAX_DIM = 1000;
 
 interface Props {
@@ -35,28 +35,32 @@ export function ImageUploader({ vendorId, value, onChange }: Props) {
       return;
     }
     if (file.size > MAX_BYTES) {
-      toast.error('Image must be 15 MB or smaller');
+      toast.error('Image must be 5 MB or smaller');
       return;
     }
 
     setUploading(true);
-    const { blob, ext, type } = await resizeToWebp(file, MAX_DIM);
-    const path = `${vendorId}/${crypto.randomUUID()}.${ext}`;
-    const { error } = await supabase.storage
-      .from('vendor-avatars')
-      .upload(path, blob, { upsert: false, contentType: type });
+    try {
+      const { blob, ext, type } = await resizeToWebp(file, MAX_DIM);
+      const path = `${vendorId}/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage
+        .from('vendor-avatars')
+        .upload(path, blob, { upsert: false, contentType: type });
 
-    if (error) {
+      if (error) {
+        toast.error('Upload failed');
+        return;
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('vendor-avatars').getPublicUrl(path);
+      onChange(publicUrl);
+    } catch {
       toast.error('Upload failed');
+    } finally {
       setUploading(false);
-      return;
     }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from('vendor-avatars').getPublicUrl(path);
-    onChange(publicUrl);
-    setUploading(false);
   }
 
   if (value) {
